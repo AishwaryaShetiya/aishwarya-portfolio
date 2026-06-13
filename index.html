@@ -1,0 +1,3035 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Aishwarya Shetiya — PM & Builder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400;1,600;1,700;1,900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet"/>
+<style>
+/* ─────────────────────────────────────────
+   RESET & VARIABLES
+───────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --blue:#1a3fc7;
+  --red:#e2211c;
+  --green:#1fb141;
+  --yellow:#f5d016;
+  --black:#111111;
+  --dark-bg:#0a0a0a;
+  --white:#f5f5f5;
+  --gap:14px;
+  --sb:65px;
+  --serif:'Playfair Display',serif;
+  --sans:'DM Sans',sans-serif;
+}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--dark-bg);
+  color:var(--white);
+  font-family:var(--sans);
+  overflow-x:hidden;
+  cursor:none;
+}
+
+/* ─────────────────────────────────────────
+   CURSOR
+───────────────────────────────────────── */
+#cursor{
+  width:22px;height:22px;
+  background:var(--yellow);
+  border-radius:50%;
+  position:fixed;pointer-events:none;
+  z-index:9999;
+  top:0;left:0;
+  transform:translate(-50%,-50%);
+  transition:width .15s ease,height .15s ease;
+  mix-blend-mode:difference;
+}
+#cursor.grow{width:56px;height:56px;}
+
+/* ─────────────────────────────────────────
+   SIDEBARS
+───────────────────────────────────────── */
+.sb{
+  position:fixed;top:0;bottom:0;width:var(--sb);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:3.5rem;z-index:100;
+  background:var(--black);
+}
+.sb-l{left:0;border-right:2px solid rgba(255,255,255,.06);}
+.sb-r{right:0;border-left:2px solid rgba(255,255,255,.06);}
+.sb a{
+  font-family:var(--sans);font-size:.8rem;font-weight:600;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.82);
+  writing-mode:vertical-rl;text-decoration:none;
+  transition:color .2s;
+}
+.sb-l a{transform:rotate(180deg);}
+.sb a:hover{color:var(--yellow);}
+
+/* ─────────────────────────────────────────
+   HEADER — SKYLINE
+───────────────────────────────────────── */
+.hero{
+  margin:0 calc(var(--sb) + 16px);
+  background:#2563eb;
+  min-height:440px;
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+}
+.hero-sun{
+  position:absolute;
+  width:410px;height:410px;
+  background:var(--yellow);
+  border-radius:50%;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  z-index:2;           /* Layer 2: solid circle covers cityscape */
+}
+.hero-inner{
+  position:relative;z-index:3;
+  text-align:center;
+  padding:0 1rem 1.2rem;
+  max-width:310px; /* prevents credential/badge overflowing circle width */
+}
+.hero-name{
+  font-family:var(--serif);font-style:italic;font-weight:900;
+  font-size:clamp(1.9rem,4.2vw,3.1rem);
+  color:var(--black);line-height:1;letter-spacing:-.01em;
+}
+.hero-role{
+  font-family:var(--sans);font-size:.72rem;font-weight:500;
+  letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(0,0,0,.82);margin-top:1rem;
+}
+/* Credential line */
+.hero-cred{
+  font-family:var(--sans);font-size:.58rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(0,0,0,.52);margin-top:.6rem;
+  line-height:1.5;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:var(--black);color:var(--yellow);
+  font-size:.58rem;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;padding:.35rem .9rem;
+  margin-top:.7rem;
+}
+.hero-dot{
+  width:5px;height:5px;background:#4ade80;border-radius:50%;
+  flex-shrink:0;
+  animation:pulse 1.4s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}
+/* Hero CTAs */
+.hero-ctas{
+  display:flex;gap:.45rem;justify-content:center;
+  margin-top:1.4rem;
+}
+.hero-cta{
+  font-family:var(--sans);font-size:.55rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  background:var(--blue);color:#fff;
+  border:none;cursor:pointer;
+  padding:.45rem 1.1rem;
+  text-decoration:none;
+  display:inline-flex;align-items:center;
+  transition:opacity .18s;
+}
+.hero-cta:hover{opacity:.82;}
+/* Cityscape — full background, behind the sun circle */
+.skyline{
+  position:absolute;inset:0;
+  width:100%;height:100%;
+  z-index:1;
+  pointer-events:none;
+  object-fit:cover;
+  object-position:center bottom;
+}
+
+/* ─────────────────────────────────────────
+   GRID WRAPPER
+───────────────────────────────────────── */
+.wrap{
+  margin:0 calc(var(--sb) + 16px);
+  padding:var(--gap);
+  background:var(--dark-bg);
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-auto-rows:430px;
+  gap:var(--gap);
+}
+/* spans */
+.c2{grid-column:span 2;}
+.c3{grid-column:span 3;}
+
+/* ─────────────────────────────────────────
+   TILE BASE
+───────────────────────────────────────── */
+.tile{
+  position:relative;overflow:hidden;
+  min-height:320px;
+  border-radius:8px;
+  opacity:0;
+  transform:translateY(26px) scale(.985);
+  transition:
+    opacity .6s ease,
+    transform .6s ease,
+    background-color .28s ease,
+    box-shadow .28s ease;
+}
+.tile.vis{opacity:1;transform:translateY(0) scale(1);}
+
+/* Hoverable tiles darken + white border glow */
+.tile.hov:hover{
+  background-color:var(--black) !important;
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.18);
+  cursor:pointer;
+}
+.tile.hov:hover *{color:#fff !important;-webkit-text-fill-color:#fff !important;}
+/* Arrow button */
+.arr{
+  position:absolute;top:1.4rem;right:1.4rem;
+  width:38px;height:38px;border-radius:50%;
+  background:var(--yellow);color:var(--black);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;font-weight:900;
+  transition:transform .25s ease,background .2s;
+}
+.tile.hov:hover .arr{transform:rotate(45deg) scale(1.12);}
+
+/* tile heights */
+.tall{min-height:420px;}
+.med{min-height:260px;}
+.short{min-height:180px;}
+
+/* tile colors */
+.bg-blue{background:var(--blue);}
+.bg-red{background:var(--red);}
+.bg-green{background:var(--green);}
+.bg-black{background:var(--black);}
+.bg-dark{background:#1c1c1c;}
+
+/* ─────────────────────────────────────────
+   TILE CONTENT STYLES
+───────────────────────────────────────── */
+.pad{padding:2.8rem 2.4rem;}
+.padl{padding:3.2rem 2.8rem;}
+
+/* Tag / label */
+.tag{
+  font-family:var(--sans);font-size:.82rem;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--yellow);
+  display:flex;align-items:center;gap:.5rem;
+  margin-bottom:1.2rem;
+}
+/* Bigger tag variant for the intro tile */
+.tag-lg{
+  font-family:var(--sans);font-size:.82rem;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--yellow);
+  display:flex;align-items:center;gap:.6rem;
+  margin-bottom:1.3rem;
+}
+.tag-lg::before{
+  content:'';width:3px;height:12px;
+  background:currentColor;display:block;flex-shrink:0;
+}
+/* Waving hand */
+.wave{
+  display:inline-block;
+  font-size:1.2rem;
+  animation:wave 2.2s ease-in-out infinite;
+  transform-origin:70% 70%;
+  margin-left:.1rem;
+}
+@keyframes wave{
+  0%  {transform:rotate(0deg);}
+  10% {transform:rotate(18deg);}
+  20% {transform:rotate(-8deg);}
+  30% {transform:rotate(18deg);}
+  40% {transform:rotate(-4deg);}
+  50% {transform:rotate(12deg);}
+  60% {transform:rotate(0deg);}
+  100%{transform:rotate(0deg);}
+}
+.tag::before{
+  content:'';width:3px;height:10px;
+  background:currentColor;display:block;flex-shrink:0;
+}
+.tag.dk{color:rgba(0,0,0,.55);}
+
+/* Headings */
+.h1{
+  font-family:var(--serif);font-weight:700;
+  font-size:clamp(1.8rem,3.5vw,2.9rem);
+  line-height:1.05;margin-bottom:1rem;
+}
+.h2{
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(1.4rem,2.5vw,2.2rem);
+  line-height:1.12;
+}
+.body-text{
+  font-size:.92rem;color:rgba(255,255,255,.65);
+  line-height:1.85;margin-bottom:1.4rem;
+}
+.body-dark{color:rgba(0,0,0,.6);}
+
+/* Large name */
+.big-name{
+  font-family:var(--serif);font-style:italic;font-weight:900;
+  font-size:clamp(3.4rem,6.5vw,5.8rem);
+  line-height:.92;letter-spacing:-.02em;
+  margin-bottom:1rem;
+}
+
+/* Editorial quote */
+.quote-wrap{
+  padding:3rem 2.6rem;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  height:100%;
+}
+.q-mark{
+  font-family:var(--serif);font-size:8rem;color:rgba(245,208,22,.2);
+  line-height:.7;margin-bottom:-.2rem;display:block;
+}
+.q-text{
+  font-family:var(--serif);font-style:italic;font-weight:600;
+  font-size:clamp(1.55rem,2.9vw,2.4rem);
+  color:var(--yellow);line-height:1.22;
+}
+.q-sub{
+  font-size:.7rem;color:rgba(255,255,255,.4);
+  margin-top:.8rem;letter-spacing:.05em;
+}
+
+/* ─────────────────────────────────────────
+   PHOTO / ILLUSTRATION TILE
+───────────────────────────────────────── */
+.photo-tile{
+  overflow:hidden;padding:0;
+  display:flex;align-items:stretch;
+}
+.photo-tile img{
+  width:100%;height:100%;
+  object-fit:cover;object-position:center 18%;
+  display:block;
+}
+.photo-placeholder{
+  flex:1;min-height:320px;
+  background:linear-gradient(160deg, #1a3fc7 0%, #0e2780 100%);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:.8rem;
+  position:relative;overflow:hidden;
+}
+.ph-circle{
+  width:96px;height:96px;border-radius:50%;
+  background:rgba(245,208,22,.2);
+  border:2px solid rgba(245,208,22,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-size:2rem;font-weight:700;
+  color:var(--yellow);
+}
+.ph-note{
+  font-size:.48rem;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(255,255,255,.3);text-align:center;max-width:120px;
+  line-height:1.6;
+}
+/* Decorative SVG elements on placeholder */
+.ph-deco{
+  position:absolute;bottom:0;right:0;left:0;
+  width:100%;opacity:.07;
+}
+
+/* Illustration SVG tile */
+.svg-tile{
+  display:flex;align-items:center;justify-content:center;
+  padding:1.5rem;overflow:hidden;
+}
+
+/* ─────────────────────────────────────────
+   EXPERIENCE / WORK
+───────────────────────────────────────── */
+.exp-list{display:flex;flex-direction:column;gap:1.2rem;}
+.exp-row{
+  padding-bottom:1.2rem;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.exp-row:last-child{border-bottom:none;padding-bottom:0;}
+.exp-head{
+  display:flex;justify-content:space-between;
+  align-items:flex-start;gap:1rem;margin-bottom:.35rem;
+}
+.exp-role{font-size:.88rem;font-weight:700;line-height:1.2;}
+.exp-co{font-size:.72rem;color:var(--yellow);margin-top:.1rem;}
+.exp-period{font-size:.6rem;color:rgba(255,255,255,.35);white-space:nowrap;padding-top:.15rem;}
+.exp-blurb{font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:.55rem;}
+.chips{display:flex;gap:.35rem;flex-wrap:wrap;}
+.chip{
+  font-size:.5rem;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;padding:.22rem .6rem;
+  border:1px solid rgba(255,255,255,.18);
+  color:rgba(255,255,255,.55);
+}
+.chip.y{border-color:rgba(245,208,22,.3);color:var(--yellow);}
+.see-all{
+  font-size:.6rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--yellow);
+  margin-top:1.2rem;display:inline-block;
+  cursor:pointer;transition:opacity .2s;
+}
+.see-all:hover{opacity:.7;}
+
+/* ─────────────────────────────────────────
+   PROJECT TILES (legacy, kept for modals)
+───────────────────────────────────────── */
+.proj-num{
+  font-family:var(--serif);font-weight:900;font-style:italic;
+  font-size:4.5rem;color:rgba(255,255,255,.1);
+  line-height:1;position:absolute;top:1rem;right:1.5rem;
+  user-select:none;
+}
+.proj-pill{
+  display:inline-block;font-size:.48rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:.28rem .7rem;background:rgba(255,255,255,.1);
+  margin-bottom:.7rem;
+}
+.proj-title{
+  font-family:var(--serif);font-weight:700;
+  font-size:1.15rem;line-height:1.2;margin-bottom:.6rem;
+}
+.proj-desc{
+  font-size:.78rem;color:rgba(255,255,255,.6);
+  line-height:1.65;margin-bottom:1rem;
+}
+.metrics{display:flex;gap:1.2rem;flex-wrap:wrap;margin-top:.5rem;}
+.met-n{
+  font-family:var(--serif);font-weight:700;
+  font-size:1.4rem;color:var(--yellow);
+  display:block;line-height:1;
+}
+.met-l{
+  font-size:.56rem;color:rgba(255,255,255,.4);
+  font-weight:400;display:block;margin-top:.2rem;
+  letter-spacing:.06em;text-transform:uppercase;
+}
+
+/* ─────────────────────────────────────────
+   ROW 3: OASIS / CURRENTLY / NEXT CHAPTER
+───────────────────────────────────────── */
+/* shared small tag */
+.r3-tag{
+  font-family:var(--sans);font-size:.82rem;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  display:flex;align-items:center;gap:.5rem;margin-bottom:1.4rem;
+}
+.r3-tag::before{content:'';width:3px;height:10px;background:currentColor;display:block;flex-shrink:0;}
+
+/* ── Tile 1: Oasis ── */
+.oasis-headline{
+  font-family:var(--serif);font-weight:700;font-style:italic;
+  font-size:clamp(1.55rem,2.8vw,2.2rem);line-height:1.12;
+  margin-bottom:1.2rem;color:#fff;
+}
+.oasis-headline em{
+  font-style:normal;color:var(--yellow);
+  background:linear-gradient(90deg,var(--yellow),#ffe566,var(--yellow));
+  background-size:200% auto;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:shimmerText 3s linear infinite;
+}
+@keyframes shimmerText{
+  0%{background-position:0% center;}
+  100%{background-position:200% center;}
+}
+.oasis-body{
+  font-size:.92rem;color:rgba(255,255,255,.82);
+  line-height:1.8;margin-bottom:1.4rem;flex:1;
+}
+.oasis-body strong{color:rgba(255,255,255,.9);font-weight:600;}
+.oasis-chips{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:auto;}
+.o-chip{
+  font-size:.48rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  padding:.3rem .7rem;border:1px solid rgba(255,255,255,.2);
+  color:rgba(255,255,255,.55);
+  animation:chipPulse 4s ease-in-out infinite;
+}
+.o-chip:nth-child(2){animation-delay:1.3s;}
+.o-chip:nth-child(3){animation-delay:2.6s;}
+@keyframes chipPulse{
+  0%,100%{border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.55);}
+  50%{border-color:var(--yellow);color:var(--yellow);}
+}
+.oasis-link{
+  display:inline-flex;align-items:center;gap:.4rem;
+  font-family:var(--sans);font-size:.6rem;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+  color:var(--black);background:var(--yellow);
+  padding:.5rem 1rem;text-decoration:none;
+  transition:background .2s, transform .2s, box-shadow .2s;
+  white-space:nowrap;flex-shrink:0;
+}
+.oasis-link:hover{
+  background:#fff;transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(0,0,0,.25);
+}
+.oasis-arrow{
+  display:inline-block;
+  transition:transform .2s;
+}
+.oasis-link:hover .oasis-arrow{transform:translate(2px,-2px);}
+
+/* ── Tile 2: Currently ── */
+.cur-headline{
+  font-family:var(--serif);font-weight:700;
+  font-size:clamp(1.9rem,3.4vw,2.7rem);line-height:1.05;
+  color:#fff;margin-bottom:1.5rem;display:flex;align-items:center;gap:.5rem;
+}
+.cur-cursor{
+  display:inline-block;width:3px;height:1.4em;
+  background:var(--yellow);vertical-align:middle;
+  animation:blink .9s step-end infinite;
+}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+.cur-list{display:flex;flex-direction:column;gap:.85rem;flex:1;}
+.cur-item{
+  display:flex;align-items:flex-start;gap:.7rem;
+  font-size:.78rem;color:rgba(255,255,255,.7);line-height:1.4;
+  opacity:0;transform:translateY(12px);
+  animation:itemRise .5s ease forwards;
+}
+.cur-item:nth-child(1){animation-delay:.1s;}
+.cur-item:nth-child(2){animation-delay:.25s;}
+.cur-item:nth-child(3){animation-delay:.4s;}
+.cur-item:nth-child(4){animation-delay:.55s;}
+@keyframes itemRise{to{opacity:1;transform:translateY(0);}}
+.cur-emoji{font-size:1rem;flex-shrink:0;line-height:1.4;}
+.cur-label{color:rgba(255,255,255,.9);font-weight:600;}
+.cur-stamp{
+  font-size:.52rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(255,255,255,.25);margin-top:1.2rem;display:flex;align-items:center;gap:.4rem;
+}
+.cur-stamp::before{
+  content:'';width:6px;height:6px;border-radius:50%;background:var(--green);
+  display:block;animation:liveDot 2s ease-in-out infinite;
+}
+@keyframes liveDot{
+  0%,100%{box-shadow:0 0 0 0 rgba(31,177,65,.6);}
+  50%{box-shadow:0 0 0 5px rgba(31,177,65,0);}
+}
+
+/* ── Tile 3: Next Chapter ── */
+.next-headline{
+  font-family:var(--serif);font-weight:700;font-style:italic;
+  font-size:clamp(1.6rem,3vw,2.4rem);line-height:1.12;
+  color:#fff;margin-bottom:1.3rem;
+  position:relative;display:inline-block;
+}
+.next-headline::after{
+  content:'';position:absolute;left:0;bottom:-4px;
+  width:0;height:2px;background:var(--yellow);
+  animation:drawLine 1.8s .6s ease forwards;
+}
+@keyframes drawLine{to{width:100%;}}
+.next-body{
+  font-size:.92rem;color:rgba(255,255,255,.82);
+  line-height:1.85;margin-bottom:1.4rem;flex:1;
+}
+.next-body strong{color:#fff;font-weight:700;}
+.next-cta{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--yellow);cursor:default;
+  animation:ctaPulse 2.5s ease-in-out infinite;
+}
+.next-cta::after{content:'↗';font-size:.8rem;}
+@keyframes ctaPulse{
+  0%,100%{opacity:1;}
+  50%{opacity:.5;}
+}
+
+/* ─────────────────────────────────────────
+   HOW I WORK ACCORDION
+───────────────────────────────────────── */
+.hw-phase{border-bottom:1px solid rgba(255,255,255,.07);}
+.hw-phase:first-child{border-top:1px solid rgba(255,255,255,.07);}
+.hw-header{
+  width:100%;display:flex;align-items:center;gap:.7rem;
+  background:none;border:none;cursor:pointer;
+  padding:.6rem 0;text-align:left;
+}
+.hw-header:focus-visible{outline:1px solid var(--yellow);outline-offset:2px;}
+.hw-num{
+  font-family:var(--serif);font-weight:900;font-style:italic;
+  font-size:1.25rem;min-width:2.1rem;line-height:1;
+  transition:color .2s;
+}
+.hw-name{
+  font-family:var(--sans);font-size:.82rem;font-weight:700;
+  letter-spacing:.08em;color:rgba(255,255,255,.5);
+  flex:1;text-transform:uppercase;transition:color .2s;
+}
+.hw-header.hw-open .hw-name{color:#fff;}
+.hw-chevron{
+  font-size:.7rem;color:rgba(255,255,255,.3);
+  transition:transform .25s ease;display:block;line-height:1;
+}
+.hw-header.hw-open .hw-chevron{transform:rotate(180deg);}
+.hw-content{
+  max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .3s ease, opacity .22s ease;
+}
+.hw-content.open{max-height:260px;opacity:1;}
+@media(prefers-reduced-motion:reduce){
+  .hw-content,.hw-chevron{transition:none!important;}
+}
+.hw-desc{
+  font-family:var(--serif);font-style:italic;
+  font-size:.88rem;color:rgba(255,255,255,.58);
+  margin-bottom:.55rem;line-height:1.55;
+}
+.hw-chips{display:flex;flex-wrap:wrap;gap:.35rem;padding-bottom:.7rem;}
+.hw-chip{
+  font-size:.58rem;font-weight:600;letter-spacing:.05em;
+  text-transform:uppercase;padding:.24rem .65rem;
+  border:1px solid rgba(255,255,255,.14);
+  color:rgba(255,255,255,.5);
+}
+.hw-chip.ab{border-color:rgba(26,63,199,.6);color:rgba(140,170,255,.92);}
+.hw-chip.ar{border-color:rgba(226,33,28,.55);color:rgba(255,120,115,.92);}
+.hw-chip.ag{border-color:rgba(31,177,65,.55);color:rgba(90,220,120,.92);}
+.hw-chip.ay{border-color:rgba(245,208,22,.45);color:rgba(245,208,22,.92);}
+.hw-closing{
+  font-size:.66rem;color:rgba(255,255,255,.3);font-style:italic;
+  margin-top:.8rem;line-height:1.5;padding-top:.6rem;
+  border-top:1px solid rgba(255,255,255,.07);
+}
+
+/* ─────────────────────────────────────────
+   ROW 4: IMPACT METRICS + META SITE TILE
+───────────────────────────────────────── */
+.impact-grid{
+  display:grid;grid-template-columns:1fr 1fr 1fr;
+  gap:0;flex:1;margin-top:.6rem;
+}
+.impact-cell{
+  padding:1rem .8rem 1rem .9rem;
+  display:flex;flex-direction:column;justify-content:center;
+  position:relative;overflow:visible;
+}
+.imp-n{
+  font-family:var(--serif);font-weight:900;font-style:italic;
+  font-size:clamp(1.6rem,2.4vw,2.6rem);line-height:1;
+  color:#fff;display:block;
+  white-space:nowrap;
+  opacity:0;transform:translateY(10px);
+  animation:impRise .55s ease forwards;
+}
+.impact-cell:nth-child(1) .imp-n{animation-delay:.05s;}
+.impact-cell:nth-child(2) .imp-n{animation-delay:.18s;}
+.impact-cell:nth-child(3) .imp-n{animation-delay:.31s;}
+.impact-cell:nth-child(4) .imp-n{animation-delay:.44s;}
+.impact-cell:nth-child(5) .imp-n{animation-delay:.57s;}
+.impact-cell:nth-child(6) .imp-n{animation-delay:.70s;}
+@keyframes impRise{to{opacity:1;transform:translateY(0);}}
+.imp-l{
+  font-size:.54rem;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.75);
+  margin-top:.4rem;display:block;line-height:1.35;
+}
+.impact-divider{
+  width:100%;height:1px;background:rgba(255,255,255,.15);
+  margin:0;border:none;
+}
+
+/* meta site tile */
+.meta-tag{
+  font-family:var(--sans);font-size:.52rem;font-weight:700;
+  letter-spacing:.2em;text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:.5rem;
+  color:var(--yellow);margin-bottom:1.1rem;
+}
+.meta-tag::before{content:'';width:3px;height:10px;background:currentColor;display:block;}
+.meta-version{
+  font-family:var(--sans);font-size:.52rem;font-weight:700;
+  letter-spacing:.12em;padding:.2rem .6rem;
+  border:1px solid var(--yellow);color:var(--yellow);
+  animation:versionBlink 3s ease-in-out infinite;
+}
+@keyframes versionBlink{
+  0%,90%,100%{opacity:1;}
+  95%{opacity:.3;}
+}
+.meta-headline{
+  font-family:var(--serif);font-weight:700;
+  font-size:clamp(1.6rem,3vw,2.4rem);line-height:1.1;
+  color:#fff;margin-bottom:.55rem;
+  position:relative;display:inline-block;
+}
+.meta-headline::after{
+  content:'';position:absolute;left:0;bottom:-3px;
+  width:0;height:2px;background:var(--yellow);
+  animation:drawLine 2s .4s ease forwards;
+}
+.meta-subline{
+  font-family:var(--sans);font-size:.7rem;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:var(--yellow);opacity:.75;
+  margin-bottom:.9rem;margin-top:.3rem;
+}
+.meta-body{
+  font-size:.76rem;color:rgba(255,255,255,.6);
+  line-height:1.8;flex:1;
+}
+.meta-body strong{color:rgba(255,255,255,.9);font-weight:600;}
+.meta-body em{font-style:italic;color:rgba(255,255,255,.5);}
+.meta-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:1.3rem;padding-top:.9rem;
+  border-top:1px solid rgba(255,255,255,.1);
+}
+.meta-shipped{
+  font-size:.52rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.3);display:flex;align-items:center;gap:.4rem;
+}
+.meta-shipped::before{
+  content:'';width:6px;height:6px;border-radius:50%;background:var(--green);
+  flex-shrink:0;animation:liveDot 2s ease-in-out infinite;
+}
+.meta-changelog{
+  font-size:.52rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:rgba(255,255,255,.2);display:flex;align-items:center;gap:.35rem;
+  position:relative;cursor:default;
+}
+.meta-changelog::after{
+  content:'soon';font-size:.44rem;padding:.15rem .4rem;
+  background:rgba(245,208,22,.15);color:var(--yellow);
+  letter-spacing:.06em;
+}
+
+/* ─────────────────────────────────────────
+   TOOLKIT MARQUEE
+───────────────────────────────────────── */
+.marquee-wrap{
+  position:relative;overflow:hidden;
+  background:var(--black);
+  padding:0;
+}
+.marquee-wrap::before,
+.marquee-wrap::after{
+  content:'';position:absolute;top:0;bottom:0;width:120px;z-index:2;pointer-events:none;
+}
+.marquee-wrap::before{left:0;background:linear-gradient(to right,var(--black),transparent);}
+.marquee-wrap::after{right:0;background:linear-gradient(to left,var(--black),transparent);}
+.marquee-track{
+  display:flex;width:max-content;
+  animation:marqueeScroll 38s linear infinite;
+}
+.marquee-wrap:hover .marquee-track{animation-play-state:paused;}
+@keyframes marqueeScroll{
+  0%{transform:translateX(0);}
+  100%{transform:translateX(-50%);}
+}
+.tool-tile{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:.55rem;padding:2rem 2.2rem;
+  min-width:120px;flex-shrink:0;
+  transition:background .22s ease;
+  cursor:default;
+}
+.tool-tile:hover{background:rgba(26,63,199,.35);}
+.tool-icon{
+  width:48px;height:48px;
+  background:#fff;
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  padding:6px;
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.tool-icon img{
+  width:36px;height:36px;object-fit:contain;
+  display:block;
+}
+.tool-tile:hover .tool-icon{
+  transform:scale(1.1);
+  box-shadow:0 4px 16px rgba(0,0,0,.3);
+}
+.tool-label{
+  font-size:.46rem;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:rgba(255,255,255,.4);
+  white-space:nowrap;
+}
+.tool-tile:hover .tool-label{color:var(--yellow);}
+
+/* ─────────────────────────────────────────
+   AISH'S CORNER
+───────────────────────────────────────── */
+.corner-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:var(--gap);
+}
+.corner-tile{
+  background:var(--black);padding:1.8rem 1.6rem;
+  min-height:210px;
+  opacity:0;transform:translateY(18px);
+  transition:opacity .5s ease,transform .5s ease;
+  border-top:3px solid var(--blue);
+}
+.corner-tile:nth-child(2){border-top-color:var(--red);}
+.corner-tile:nth-child(3){border-top-color:var(--green);}
+.corner-tile:nth-child(4){border-top-color:var(--yellow);}
+.corner-tile.vis{opacity:1;transform:translateY(0);}
+.corner-anim{display:block;margin-bottom:.9rem;width:56px;height:56px;}
+
+/* steam */
+.steam-a{opacity:0;animation:steamRise 3s ease-in-out infinite;}
+.s1{animation-delay:0s;}.s2{animation-delay:1s;}.s3{animation-delay:2s;}
+@keyframes steamRise{
+  0%{opacity:0;transform:translateY(0);}
+  25%{opacity:.75;}
+  75%{opacity:.3;transform:translateY(-7px);}
+  100%{opacity:0;transform:translateY(-12px);}
+}
+/* clapper */
+.clapper-arm{transform-box:fill-box;transform-origin:left top;animation:clap 3s ease-in-out infinite;}
+@keyframes clap{
+  0%,55%,100%{transform:rotate(0deg);}
+  65%{transform:rotate(-28deg);}
+  75%{transform:rotate(0deg);}
+}
+/* cookie */
+.cookie-spin{transform-box:fill-box;transform-origin:center;animation:cookSpin 9s linear infinite;}
+@keyframes cookSpin{to{transform:rotate(360deg);}}
+/* gelato drip */
+.gelato-drip{stroke-dasharray:22;stroke-dashoffset:22;animation:dripSlide 2.8s ease-in-out infinite;}
+@keyframes dripSlide{
+  0%{stroke-dashoffset:22;opacity:1;}
+  55%{stroke-dashoffset:0;opacity:1;}
+  85%{stroke-dashoffset:0;opacity:0;}
+  100%{stroke-dashoffset:22;opacity:0;}
+}
+
+.corner-lbl{
+  font-size:.46rem;font-weight:700;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--yellow);
+  display:block;margin-bottom:.5rem;
+}
+.corner-h{
+  font-family:var(--serif);font-style:italic;font-weight:600;
+  font-size:1.1rem;color:var(--white);
+  line-height:1.35;margin-bottom:.4rem;
+}
+.corner-sub{
+  font-size:.76rem;color:rgba(255,255,255,.45);line-height:1.65;
+}
+
+/* ─────────────────────────────────────────
+   SECTION RULE
+───────────────────────────────────────── */
+.sec-rule{
+  display:flex;align-items:center;gap:1rem;
+  padding:2.4rem 0 .6rem;
+}
+.rule-line{flex:1;height:1px;background:rgba(255,255,255,.06);}
+.rule-text{
+  font-size:.44rem;font-weight:700;letter-spacing:.26em;
+  text-transform:uppercase;color:rgba(255,255,255,.22);
+  white-space:nowrap;
+}
+
+/* ─────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────── */
+.footer{
+  margin:var(--gap) calc(var(--sb) + 16px) 0;
+  background:var(--black);
+  padding:4.5rem 3.5rem 3rem;
+}
+.nl-wrap{max-width:560px;margin:0 auto 4rem;text-align:center;}
+.nl-h{
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(1.8rem,4vw,2.8rem);
+  color:var(--yellow);line-height:1.15;margin-bottom:1rem;
+}
+.nl-sub{
+  font-size:1.05rem;color:rgba(255,255,255,.62);
+  line-height:1.9;margin-bottom:2rem;
+}
+/* ─── Contact Form ─── */
+.cf{
+  margin-top:2.4rem;text-align:left;
+  display:flex;flex-direction:column;gap:.9rem;
+}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:.9rem;}
+@media(max-width:540px){.cf-row{grid-template-columns:1fr;}}
+.cf-field{display:flex;flex-direction:column;gap:.35rem;}
+.cf-label{
+  font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.32);
+}
+.cf-input,.cf-textarea{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);
+  color:#fff;font-family:var(--sans);font-size:.9rem;
+  padding:.7rem .9rem;outline:none;
+  transition:border-color .2s,background .2s;
+  width:100%;box-sizing:border-box;
+}
+.cf-input::placeholder,.cf-textarea::placeholder{color:rgba(255,255,255,.22);}
+.cf-input:focus,.cf-textarea:focus{
+  border-color:rgba(245,208,22,.5);background:rgba(255,255,255,.06);
+}
+.cf-textarea{resize:vertical;min-height:110px;line-height:1.7;}
+.cf-submit{
+  background:var(--yellow);color:var(--black);border:none;cursor:pointer;
+  font-family:var(--sans);font-size:.58rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  padding:.75rem 2rem;align-self:flex-start;
+  transition:background .2s,opacity .2s;
+}
+.cf-submit:hover{background:#fff;}
+.cf-submit:disabled{opacity:.5;cursor:not-allowed;}
+.cf-msg{
+  font-size:.82rem;line-height:1.7;margin-top:.2rem;
+  display:none;
+}
+.cf-msg.ok{color:rgba(31,177,65,.85);}
+.cf-msg.err{color:rgba(226,33,28,.85);}
+.footer-links{
+  display:flex;align-items:center;justify-content:center;
+  gap:.8rem;margin-top:2rem;flex-wrap:wrap;
+}
+.footer-link{
+  font-family:var(--sans);font-size:.65rem;font-weight:700;
+  letter-spacing:.14em;text-transform:uppercase;
+  color:var(--yellow);text-decoration:none;
+  padding:.5rem 1.2rem;
+  border:1px solid rgba(245,208,22,.35);
+  transition:background .2s,color .2s,border-color .2s;
+}
+.footer-link:hover{
+  background:var(--yellow);color:var(--black);
+  border-color:var(--yellow);
+}
+.footer-link-dot{
+  color:rgba(255,255,255,.2);font-size:.9rem;line-height:1;
+}
+.footer-tagline{
+  font-family:var(--serif);font-style:italic;
+  font-size:clamp(1.8rem,4.5vw,3.2rem);
+  color:var(--yellow);text-align:center;
+  line-height:1.1;margin-bottom:2rem;
+}
+.footer-copy{
+  text-align:center;font-size:.72rem;
+  color:rgba(255,255,255,.32);letter-spacing:.06em;
+}
+
+/* ─── Back to Top ─── */
+#back-top{
+  position:fixed;bottom:2rem;right:calc(var(--sb) + 1.2rem);z-index:400;
+  background:var(--yellow);color:var(--black);
+  border:none;cursor:pointer;
+  width:2.6rem;height:2.6rem;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.9rem;font-weight:700;
+  opacity:0;pointer-events:none;
+  transform:translateY(12px);
+  transition:opacity .28s ease,transform .28s ease;
+}
+#back-top.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
+#back-top:hover{background:#fff;}
+
+/* ─────────────────────────────────────────
+   MODALS
+───────────────────────────────────────── */
+.overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.88);
+  backdrop-filter:blur(10px);
+  z-index:1000;display:none;
+  align-items:center;justify-content:center;
+  padding:2rem;
+}
+.overlay.open{display:flex;}
+.modal{
+  background:#161616;
+  width:100%;max-width:860px;
+  max-height:90vh;overflow-y:auto;
+  padding:3.2rem 3.6rem;position:relative;
+  border:1px solid rgba(255,255,255,.09);
+}
+.modal-x{
+  position:absolute;top:1.2rem;right:1.2rem;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);
+  cursor:pointer;
+  color:rgba(255,255,255,.6);font-size:1.2rem;
+  width:52px;height:52px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;z-index:10;
+  transition:color .2s, background .2s, border-color .2s, transform .15s;
+  font-family:var(--sans);
+}
+.modal-x:hover{
+  color:#fff;
+  background:rgba(255,255,255,.18);
+  border-color:rgba(255,255,255,.4);
+  transform:scale(1.08);
+}
+.modal-tag{
+  font-size:.6rem;font-weight:700;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--yellow);margin-bottom:.9rem;
+}
+.modal-h{
+  font-family:var(--serif);font-weight:800;
+  font-size:clamp(2.2rem,4vw,3.2rem);
+  line-height:1.1;margin-bottom:1.6rem;
+}
+.modal-body{
+  font-size:1rem;color:rgba(255,255,255,.78);
+  line-height:1.9;
+}
+.modal-body strong{color:var(--yellow);font-weight:700;font-size:1.05rem;}
+.modal-body p + p{ margin-top:.6rem; }
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-thumb{background:var(--blue);}
+
+/* ─────────────────────────────────────────
+   VENN DIAGRAM
+───────────────────────────────────────── */
+@keyframes venn-p{
+  0%,100%{transform:translate(0px,0px);}
+  38%{transform:translate(-9px,-7px);}
+  72%{transform:translate(5px,5px);}
+}
+@keyframes venn-a{
+  0%,100%{transform:translate(0px,0px);}
+  32%{transform:translate(8px,-6px);}
+  67%{transform:translate(-4px,8px);}
+}
+@keyframes venn-d{
+  0%,100%{transform:translate(0px,0px);}
+  44%{transform:translate(6px,8px);}
+  78%{transform:translate(-8px,-5px);}
+}
+@keyframes venn-glow-pulse{
+  0%,100%{opacity:.45;}
+  50%{opacity:.9;}
+}
+.vc-p{animation:venn-p 7.5s ease-in-out infinite;}
+.vc-a{animation:venn-a 8.3s ease-in-out infinite;}
+.vc-d{animation:venn-d 6.7s ease-in-out infinite;}
+.vc-center{animation:venn-glow-pulse 5s ease-in-out infinite;}
+
+/* ─────────────────────────────────────────
+   SUB-PAGES (full-screen slide-up overlays)
+───────────────────────────────────────── */
+.subpage{
+  position:fixed;inset:0;z-index:500;
+  background:var(--dark-bg);overflow-y:auto;
+  transform:translateY(100%);
+  transition:transform .45s cubic-bezier(.22,1,.36,1);
+  will-change:transform;
+}
+.subpage.sp-open{transform:translateY(0);}
+.sp-topbar{
+  position:sticky;top:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.2rem 2.4rem;
+  background:rgba(10,10,10,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  z-index:10;
+}
+.sp-back{
+  display:flex;align-items:center;gap:.5rem;
+  font-family:var(--sans);font-size:.6rem;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;
+  color:rgba(255,255,255,.5);
+  cursor:pointer;border:none;background:none;
+  padding:0;
+  transition:color .2s;
+}
+.sp-back:hover{color:var(--yellow);}
+.sp-back-arrow{margin-right:.3rem;font-size:.9rem;}
+.sp-title{
+  font-family:var(--sans);font-size:.68rem;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(255,255,255,.3);
+}
+.sp-inner{
+  max-width:900px;margin:0 auto;
+  padding:4rem 2.4rem 6rem;
+}
+.sp-hero-tag{
+  font-family:var(--sans);font-size:.68rem;font-weight:700;
+  letter-spacing:.22em;text-transform:uppercase;
+  color:var(--yellow);margin-bottom:1rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.sp-hero-tag::before{content:'';width:3px;height:10px;background:currentColor;display:block;}
+.sp-h{
+  font-family:var(--serif);font-weight:700;
+  font-size:clamp(2rem,5vw,3.6rem);line-height:1.05;
+  margin-bottom:1.4rem;
+}
+.sp-lead{
+  font-size:1.05rem;color:rgba(255,255,255,.68);
+  line-height:1.9;margin-bottom:3rem;max-width:640px;
+}
+.sp-exp-card{
+  border:1px solid rgba(255,255,255,.07);
+  padding:2.6rem 2.6rem 2rem;
+  margin-bottom:64px;
+  transition:border-color .3s,background .3s;
+}
+.sp-exp-card:last-of-type{margin-bottom:0;}
+.sp-exp-card:hover{
+  border-color:rgba(245,208,22,.2);
+  background:rgba(255,255,255,.015);
+}
+/* Metrics strip inside exp cards */
+.sp-exp-mstrip{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
+  gap:1px;background:rgba(255,255,255,.07);
+  margin:1.4rem 0 1.8rem;
+  border:1px solid rgba(255,255,255,.07);
+}
+.sp-exp-mstrip-cell{
+  background:rgba(10,10,10,.9);
+  padding:1rem .9rem;
+  text-align:center;
+}
+.sp-exp-mn{
+  font-family:var(--serif);font-weight:900;font-style:italic;
+  font-size:clamp(1.5rem,2.6vw,2.1rem);
+  color:#fff;display:block;line-height:1;margin-bottom:.35rem;
+}
+.sp-exp-ml{
+  font-size:.6rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(255,255,255,.38);line-height:1.3;
+}
+/* Enlarged chips inside exp cards */
+.sp-exp-card .chips{gap:.5rem;margin-top:1.4rem;}
+.sp-exp-card .chip{
+  font-size:.7rem;font-weight:600;letter-spacing:.08em;
+  padding:.38rem 1rem;
+}
+/* Tools row */
+.sp-exp-tools{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap;margin:1.2rem 0 0;}
+.sp-exp-tools-label{
+  font-size:.58rem;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;color:rgba(255,255,255,.25);
+  white-space:nowrap;flex-shrink:0;
+}
+.sp-exp-tool{
+  font-size:.62rem;font-weight:500;letter-spacing:.04em;
+  color:rgba(255,255,255,.38);
+  border:1px solid rgba(255,255,255,.1);
+  padding:.18rem .55rem;
+}
+.sp-exp-header{
+  display:flex;justify-content:space-between;
+  align-items:flex-start;gap:1rem;margin-bottom:.5rem;
+}
+.sp-exp-role{
+  font-family:var(--serif);font-weight:700;
+  font-size:1.25rem;color:#fff;line-height:1.2;
+}
+.sp-exp-co{
+  font-size:.72rem;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--yellow);margin-top:.35rem;
+}
+.sp-exp-co-desc{
+  font-size:.94rem;font-style:italic;
+  color:rgba(255,255,255,.48);
+  margin-top:.3rem;line-height:1.65;
+}
+.sp-exp-period{
+  font-size:.68rem;color:rgba(255,255,255,.35);
+  white-space:nowrap;padding-top:.25rem;letter-spacing:.06em;
+}
+/* Setup — the hook paragraph with left accent border */
+.sp-exp-setup{
+  font-size:1rem;color:rgba(255,255,255,.82);
+  line-height:1.9;margin:1.6rem 0 1.3rem;
+  padding-left:1.1rem;
+  border-left:3px solid transparent;
+}
+.sp-exp-setup.ay{border-left-color:var(--yellow);}
+.sp-exp-setup.ag{border-left-color:var(--green);}
+.sp-exp-setup.ab{border-left-color:var(--blue);}
+.sp-exp-setup.ar{border-left-color:var(--red);}
+/* Work — body paragraphs */
+.sp-exp-body{
+  font-size:.96rem;color:rgba(255,255,255,.65);
+  line-height:1.95;margin-bottom:1rem;
+}
+/* So-what — closing thought in serif italic */
+.sp-exp-sowhat{
+  font-family:var(--serif);font-style:italic;
+  font-size:1.02rem;line-height:1.65;
+  color:rgba(245,208,22,.72);
+  margin-top:1.5rem;margin-bottom:1.6rem;
+  padding-top:1.2rem;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.sp-metrics{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:rgba(255,255,255,.06);
+  margin:2.5rem 0;
+}
+.sp-met{
+  background:var(--dark-bg);padding:1.8rem 1.2rem;text-align:center;
+}
+.sp-met-n{
+  font-family:var(--serif);font-weight:900;font-style:italic;
+  font-size:clamp(1.6rem,3vw,2.4rem);color:#fff;
+  display:block;line-height:1;margin-bottom:.5rem;
+}
+.sp-met-l{
+  font-size:.65rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(255,255,255,.45);line-height:1.4;
+}
+.sp-divider{
+  display:flex;align-items:center;gap:1rem;margin:2.5rem 0 1.5rem;
+}
+.sp-divider-line{flex:1;height:1px;background:rgba(255,255,255,.07);}
+.sp-divider-txt{
+  font-size:.75rem;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;color:rgba(255,255,255,.35);white-space:nowrap;
+}
+.sp-block{
+  padding:1.6rem 0;border-bottom:1px solid rgba(255,255,255,.06);
+}
+.sp-block:last-child{border-bottom:none;}
+.sp-block-tag{
+  font-size:.65rem;font-weight:700;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--yellow);
+  margin-bottom:.6rem;display:block;
+}
+.sp-block-h{
+  font-family:var(--serif);font-weight:700;
+  font-size:1.3rem;color:#fff;margin-bottom:.6rem;
+}
+.sp-block-p{
+  font-size:1rem;color:rgba(255,255,255,.65);line-height:1.9;
+}
+@media(max-width:640px){
+  .sp-metrics{grid-template-columns:1fr 1fr;}
+  .sp-inner{padding:2.5rem 1.4rem 4rem;}
+}
+/* ─── Case Study Cards ─── */
+.cs-course-card{
+  border:1px solid rgba(255,255,255,.07);
+  border-left:3px solid rgba(255,255,255,.12);
+  padding:1.4rem 1.8rem;margin-bottom:.7rem;cursor:pointer;
+  display:flex;flex-direction:column;gap:.6rem;
+  transition:border-color .22s,background .22s,border-left-color .22s;
+}
+.cs-course-card:hover{border-color:rgba(255,255,255,.14);background:rgba(255,255,255,.02);}
+.cs-course-card.cc-blue{border-left-color:rgba(26,63,199,.55);}
+.cs-course-card.cc-blue:hover{border-left-color:rgba(26,63,199,.9);}
+.cs-course-card.cc-green{border-left-color:rgba(31,177,65,.45);}
+.cs-course-card.cc-green:hover{border-left-color:rgba(31,177,65,.8);}
+.cs-course-card.cc-red{border-left-color:rgba(226,33,28,.45);}
+.cs-course-card.cc-red:hover{border-left-color:rgba(226,33,28,.8);}
+.cs-course-card.cc-yellow{border-left-color:rgba(245,208,22,.4);}
+.cs-course-card.cc-yellow:hover{border-left-color:rgba(245,208,22,.75);}
+.cs-course-name{
+  font-family:var(--serif);font-weight:700;
+  font-size:1.2rem;color:#fff;margin-bottom:0;
+}
+.cs-course-ctx{font-size:.92rem;color:rgba(255,255,255,.5);line-height:1.78;flex:1;}
+.cs-course-footer{display:flex;align-items:center;justify-content:flex-end;margin-top:.2rem;}
+.cs-course-cta{
+  font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
+  color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.12);
+  padding:.28rem .75rem;display:flex;align-items:center;gap:.35rem;
+  transition:color .18s,border-color .18s;pointer-events:none;
+}
+.cs-course-card:hover .cs-course-cta{color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.28);}
+.cs-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:1.2rem;margin-top:1.8rem;
+}
+.cs-card{
+  border:1px solid rgba(255,255,255,.07);
+  display:flex;flex-direction:column;
+  transition:border-color .22s;
+}
+.cs-card:hover{border-color:rgba(245,208,22,.25);}
+.cs-card{cursor:pointer;transition:border-color .22s,background .22s;}
+.cs-card:hover{border-color:rgba(245,208,22,.25);background:rgba(255,255,255,.02);}
+.cs-img-slot{
+  width:100%;height:160px;overflow:hidden;
+  background:rgba(255,255,255,.025);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;
+}
+.cs-img-slot img{width:100%;height:100%;object-fit:cover;display:block;}
+.cs-img-label{
+  font-family:var(--sans);font-size:.48rem;font-weight:700;
+  letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.15);
+}
+.cs-logo-init{font-family:var(--serif);font-weight:700;font-style:italic;font-size:2.2rem;color:rgba(255,255,255,.18);}
+.cs-body{padding:1rem 1.2rem 1.2rem;flex:1;display:flex;flex-direction:column;}
+.cs-title{
+  font-family:var(--serif);font-weight:700;
+  font-size:1.05rem;color:#fff;margin-bottom:.4rem;line-height:1.2;
+}
+.cs-blurb{font-size:.88rem;color:rgba(255,255,255,.52);line-height:1.75;flex:1;}
+.cs-pdf{
+  font-family:var(--sans);font-size:.62rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:var(--yellow);text-decoration:none;
+  margin-top:.9rem;display:inline-flex;align-items:center;gap:.3rem;
+  transition:opacity .18s;
+}
+.cs-pdf:hover{opacity:.7;}
+.cs-naitiv-link{color:var(--yellow);text-decoration:underline;cursor:pointer;background:none;border:none;font:inherit;padding:0;}
+@media(max-width:600px){.cs-grid{grid-template-columns:1fr;}}
+
+/* ─── Projects Index & Deep-Dive ─── */
+.proj-card{
+  border:1px solid rgba(255,255,255,.09);
+  border-left:3px solid rgba(26,63,199,.6);
+  display:flex;flex-direction:column;
+  max-width:560px;
+}
+.proj-img-slot{
+  width:100%;aspect-ratio:16/9;
+  background:rgba(255,255,255,.025);
+  border-bottom:1px dashed rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;
+}
+.proj-img-label{font-size:.48rem;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.15);}
+.proj-body{padding:1.4rem 1.6rem 1.6rem;flex:1;display:flex;flex-direction:column;gap:.6rem;}
+.proj-title{font-family:var(--serif);font-weight:700;font-size:1.3rem;color:#fff;}
+.proj-summary{font-size:.94rem;color:rgba(255,255,255,.55);line-height:1.8;flex:1;}
+.proj-cta{
+  font-size:.62rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--yellow);text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;
+  margin-top:.4rem;
+}
+.proj-cta:hover{opacity:.75;}
+.proj-more{
+  font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;font-weight:500;
+  color:rgba(255,255,255,.2);text-align:center;margin-top:2.2rem;padding-top:2rem;
+  border-top:1px solid rgba(255,255,255,.05);
+}
+/* Deep-dive workflow blocks */
+.jsa-wf{
+  border:1px solid rgba(255,255,255,.07);
+  border-left:3px solid rgba(26,63,199,.45);
+  padding:1.4rem 1.6rem;margin-bottom:1rem;
+}
+.jsa-wf-num{
+  font-size:.55rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(26,63,199,.75);margin-bottom:.3rem;
+}
+.jsa-wf-name{
+  font-family:var(--serif);font-weight:700;font-size:1.1rem;color:#fff;margin-bottom:.7rem;
+}
+.jsa-wf-body{font-size:.95rem;color:rgba(255,255,255,.6);line-height:1.85;}
+.jsa-stack-row{
+  display:flex;gap:.9rem;padding:1rem 0;
+  border-bottom:1px solid rgba(255,255,255,.05);align-items:baseline;
+}
+.jsa-stack-tool{
+  font-family:var(--sans);font-size:.75rem;font-weight:700;color:#fff;
+  min-width:110px;flex-shrink:0;
+}
+.jsa-stack-role{font-size:.88rem;color:rgba(255,255,255,.5);line-height:1.7;}
+.jsa-ai-note{
+  font-size:.72rem;font-style:italic;color:rgba(255,255,255,.3);
+  margin-top:1rem;padding-left:.8rem;border-left:2px solid rgba(255,255,255,.08);
+}
+.jsa-closing{
+  font-size:.82rem;color:rgba(255,255,255,.28);letter-spacing:.04em;
+  margin-top:3rem;padding-top:1.6rem;border-top:1px solid rgba(255,255,255,.06);
+  text-align:center;
+}
+
+/* ─────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────── */
+/* ── Tablet landscape: keep 3 cols, shrink rows ── */
+@media(max-width:960px){
+  .sb{display:none;}
+  .wrap,.hero,.footer{margin-left:0;margin-right:0;}
+  .grid{grid-auto-rows:290px;}
+  .hero{min-height:360px;}
+  .hero-sun{width:260px;height:260px;}
+  .corner-grid{grid-template-columns:repeat(2,1fr);}
+  .sp-inner{padding:3rem 2rem 5rem;}
+}
+/* ── Tablet portrait + large mobile: single column ── */
+@media(max-width:768px){
+  .grid{grid-template-columns:1fr;grid-auto-rows:410px;}
+  .tile{min-height:410px !important;}
+  .c2,.c3{grid-column:span 1;}
+  .photo-tile{background:var(--black) !important;padding:1.2rem;}
+  .photo-tile img{object-fit:contain;object-position:center center;}
+  .hero{min-height:340px;}
+  .hero-sun{width:230px;height:230px;}
+  .pad{padding:2rem 1.8rem;}
+  .big-name{font-size:clamp(2.6rem,10vw,3.6rem);}
+  .footer{padding:3rem 1.6rem 2.5rem;}
+  .nl-wrap{margin-bottom:2.5rem;}
+  .footer-tagline{font-size:clamp(1.4rem,7vw,2.2rem);}
+  .sp-metrics{grid-template-columns:1fr 1fr;}
+  .sp-inner{padding:2.5rem 1.4rem 4rem;}
+  .sp-h{font-size:clamp(1.6rem,6vw,2.4rem);}
+  .marquee-wrap::before,.marquee-wrap::after{width:50px;}
+}
+/* ── Mobile: tighten further ── */
+@media(max-width:480px){
+  .corner-grid{grid-template-columns:1fr;}
+  .hero-sun{width:190px;height:190px;}
+  .hero-name{font-size:2rem;}
+  .pad{padding:1.8rem 1.4rem;}
+  .sp-inner{padding:2rem 1rem 3.5rem;}
+  .sp-topbar{padding:1rem 1.2rem;}
+  .marquee-wrap::before,.marquee-wrap::after{width:30px;}
+}
+
+/* ─────────────────────────────────────────
+   REDUCED MOTION
+───────────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  .hero-dot,
+  .wave,
+  .oasis-headline em,
+  .marquee-track,
+  .o-chip,
+  .vc-p,.vc-a,.vc-d,.vc-center,
+  .steam-a,.clapper-arm,.cookie-spin,.gelato-drip,
+  .meta-version,
+  .cur-cursor,
+  .next-cta,
+  .cur-stamp::before,
+  .meta-shipped::before{
+    animation:none !important;
+    transition:none !important;
+  }
+  .marquee-track{transform:none !important;}
+}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+
+<!-- LEFT SIDEBAR -->
+<nav class="sb sb-l">
+  <a href="mailto:aishwarya.shetiya@gmail.com">Email</a>
+  <a href="https://www.linkedin.com/in/aishwaryashetiya" target="_blank">LinkedIn</a>
+  <a href="https://calendly.com/aishwarya-shetiya/30min" target="_blank" rel="noopener">Schedule a Call</a>
+</nav>
+
+<!-- RIGHT SIDEBAR -->
+<nav class="sb sb-r">
+  <a href="#" onclick="event.preventDefault();openPage('experience')">Work</a>
+  <a href="Aishwarya_Product_Management_R.pdf" target="_blank" rel="noopener">Resume</a>
+  <a href="#" onclick="event.preventDefault();openPage('casestudies')">Projects</a>
+</nav>
+
+<!-- ══════════════════════════════
+     HERO / HEADER
+══════════════════════════════ -->
+<header class="hero">
+  <div class="hero-sun"></div>
+  <div class="hero-inner">
+    <div class="hero-name">Aishwarya<br>Shetiya</div>
+    <div class="hero-role">Product Manager &amp; Builder</div>
+    <div class="hero-badge">
+      <span class="hero-dot"></span>
+      Building Products Which Excite Me
+    </div>
+    <div class="hero-ctas">
+      <a href="Aishwarya_Product_Management_R.pdf" target="_blank" rel="noopener" class="hero-cta">Resume</a>
+      <button class="hero-cta" onclick="openPage('experience')">See My Work</button>
+    </div>
+  </div>
+  <!-- CITYSCAPE SILHOUETTE IMAGE — sits behind the yellow circle -->
+  <img class="skyline" src="cityspace1.png" alt="cityscape silhouette"/>
+</header>
+
+<!-- ══════════════════════════════
+     MAIN GRID
+══════════════════════════════ -->
+<div class="wrap">
+
+<!-- ── ROW 1: INTRO ── -->
+<div class="grid">
+
+  <!-- Photo tile -->
+  <div class="tile bg-blue photo-tile tall">
+    <img src="aish-photo.jpg" alt="Aishwarya Shetiya"/>
+  </div>
+
+  <!-- Intro tile -->
+  <div class="tile bg-dark pad hov" onclick="openM('about')" style="display:flex;flex-direction:column;">
+    <div class="tag-lg">Hello there <span class="wave">👋</span></div>
+    <div class="big-name">I'm<br><em style="color:var(--yellow);">Aish</em></div>
+    <p class="body-text">AI Product Manager who has shipped a 0→1 agentic product, built measurement infrastructure twice, and delivered enterprise software at scale.</p>
+    <div class="chips" style="margin-top:-.9rem;margin-bottom:1.2rem;">
+      <span class="chip" style="font-size:.65rem;padding:.32rem .9rem;border-color:#003087;color:#4a8fd4;letter-spacing:.1em;">Duke MEM '26</span>
+    </div>
+    <div style="display:flex;gap:.6rem;margin-top:auto;padding-bottom:1.4rem;">
+      <a href="Aishwarya_Product_Management_R.pdf" target="_blank" rel="noopener"
+         onclick="event.stopPropagation()"
+         style="font-family:var(--sans);font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.52rem 1.2rem;background:var(--yellow);color:var(--black);text-decoration:none;display:inline-flex;align-items:center;transition:opacity .18s;"
+         onmouseenter="this.style.opacity='.8'" onmouseleave="this.style.opacity='1'">Resume</a>
+      <button onclick="event.stopPropagation();openPage('experience')"
+         style="font-family:var(--sans);font-size:.58rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:.52rem 1.2rem;background:transparent;color:var(--yellow);border:1px solid var(--yellow);cursor:pointer;transition:background .18s,color .18s;"
+         onmouseenter="this.style.background='var(--yellow)';this.style.color='var(--black)'" onmouseleave="this.style.background='transparent';this.style.color='var(--yellow)'">See My Work</button>
+    </div>
+    <div class="arr">↗</div>
+  </div>
+
+  <!-- Metrics panel -->
+  <div class="tile bg-red" style="padding:1.6rem 1.8rem 1.4rem;display:flex;flex-direction:column;">
+    <div style="font-family:var(--sans);font-size:.82rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:rgba(0,0,0,.65);display:flex;align-items:center;gap:.5rem;margin-bottom:1rem;">
+      <span style="width:3px;height:12px;background:currentColor;display:block;flex-shrink:0;"></span>
+      Impact Across My Work
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;flex:1;gap:1px;background:rgba(0,0,0,.12);">
+      <div style="background:var(--red);padding:.8rem .8rem;display:flex;flex-direction:column;justify-content:center;">
+        <span style="font-family:var(--serif);font-weight:900;font-style:italic;font-size:clamp(1.9rem,3.2vw,2.6rem);color:var(--black);line-height:1;display:block;">320</span>
+        <span style="font-size:.46rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.6);margin-top:.3rem;line-height:1.4;">Early-Access Signups</span>
+      </div>
+      <div style="background:var(--red);padding:.8rem .8rem;display:flex;flex-direction:column;justify-content:center;">
+        <span style="font-family:var(--serif);font-weight:900;font-style:italic;font-size:clamp(1.9rem,3.2vw,2.6rem);color:var(--black);line-height:1;display:block;">28%</span>
+        <span style="font-size:.46rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.6);margin-top:.3rem;line-height:1.4;">Engagement Lift</span>
+      </div>
+      <div style="background:var(--red);padding:.8rem .8rem;display:flex;flex-direction:column;justify-content:center;">
+        <span style="font-family:var(--serif);font-weight:900;font-style:italic;font-size:clamp(1.9rem,3.2vw,2.6rem);color:var(--black);line-height:1;display:block;">$1.5M</span>
+        <span style="font-size:.46rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.6);margin-top:.3rem;line-height:1.4;">Efficiency Delivered</span>
+      </div>
+      <div style="background:var(--red);padding:.8rem .8rem;display:flex;flex-direction:column;justify-content:center;">
+        <span style="font-family:var(--serif);font-weight:900;font-style:italic;font-size:clamp(1.9rem,3.2vw,2.6rem);color:var(--black);line-height:1;display:block;">35+</span>
+        <span style="font-size:.46rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.6);margin-top:.3rem;line-height:1.4;">User Interviews</span>
+      </div>
+      <div style="background:var(--red);padding:.8rem .8rem;display:flex;flex-direction:column;justify-content:center;">
+        <span style="font-family:var(--serif);font-weight:900;font-style:italic;font-size:clamp(1.9rem,3.2vw,2.6rem);color:var(--black);line-height:1;display:block;">30%</span>
+        <span style="font-size:.46rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.6);margin-top:.3rem;line-height:1.4;">Conversion Lift</span>
+      </div>
+      <div style="background:var(--red);padding:.8rem .8rem;display:flex;flex-direction:column;justify-content:center;">
+        <span style="font-family:var(--serif);font-weight:900;font-style:italic;font-size:clamp(1.9rem,3.2vw,2.6rem);color:var(--black);line-height:1;display:block;">12</span>
+        <span style="font-size:.46rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(0,0,0,.6);margin-top:.3rem;line-height:1.4;">Roadmap Decisions Shaped</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /row 1 -->
+<div style="height:var(--gap)"></div>
+
+<!-- ── ROW 2: WORK ── -->
+<div class="grid" id="work">
+
+  <!-- What I Do capability tile -->
+  <div class="tile bg-dark pad" style="min-height:0;display:flex;flex-direction:column;justify-content:center;">
+    <div class="tag-lg" style="margin-bottom:1.6rem;">What I Do</div>
+    <div style="display:flex;flex-direction:column;gap:0;">
+      <div style="display:flex;align-items:center;gap:.9rem;padding:.85rem 0;border-bottom:1px solid rgba(255,255,255,.07);">
+        <span style="width:3px;height:14px;background:var(--red);display:block;flex-shrink:0;border-radius:2px;"></span>
+        <span style="font-family:var(--serif);font-size:1.08rem;font-weight:600;color:rgba(255,255,255,.9);line-height:1.2;">Product Strategy &amp; 0&#x2192;1</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:.9rem;padding:.85rem 0;border-bottom:1px solid rgba(255,255,255,.07);">
+        <span style="width:3px;height:14px;background:var(--blue);display:block;flex-shrink:0;border-radius:2px;"></span>
+        <span style="font-family:var(--serif);font-size:1.08rem;font-weight:600;color:rgba(255,255,255,.9);line-height:1.2;">User Research &amp; Discovery</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:.9rem;padding:.85rem 0;border-bottom:1px solid rgba(255,255,255,.07);">
+        <span style="width:3px;height:14px;background:var(--green);display:block;flex-shrink:0;border-radius:2px;"></span>
+        <span style="font-family:var(--serif);font-size:1.08rem;font-weight:600;color:rgba(255,255,255,.9);line-height:1.2;">Experimentation &amp; Measurement</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:.9rem;padding:.85rem 0;">
+        <span style="width:3px;height:14px;background:var(--yellow);display:block;flex-shrink:0;border-radius:2px;"></span>
+        <span style="font-family:var(--serif);font-size:1.08rem;font-weight:600;color:rgba(255,255,255,.9);line-height:1.2;">GTM &amp; Launch</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Venn diagram -->
+  <div class="tile bg-black" style="min-height:0;overflow:hidden;position:relative;">
+    <svg viewBox="0 0 360 420" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+      <defs>
+        <radialGradient id="venn-glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(255,255,255,.18)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Three circles — screen blend so overlaps mix naturally -->
+      <g style="mix-blend-mode:screen;">
+        <circle class="vc-p" cx="148" cy="182" r="94" fill="#e2211c" fill-opacity=".32"/>
+        <circle class="vc-a" cx="212" cy="182" r="94" fill="#1a3fc7" fill-opacity=".32"/>
+        <circle class="vc-d" cx="180" cy="250" r="94" fill="#f5d016" fill-opacity=".32"/>
+      </g>
+
+      <!-- Triple-overlap center glow — no label, just light -->
+      <ellipse class="vc-center" cx="180" cy="215" rx="34" ry="30" fill="url(#venn-glow)" style="mix-blend-mode:screen;"/>
+
+      <!-- Labels at outer edges, drift with their circle via shared class -->
+      <text class="vc-p"
+        x="66" y="86"
+        fill="rgba(255,255,255,.48)"
+        font-family="DM Sans,sans-serif"
+        font-size="9.5" font-weight="700" letter-spacing="2.5"
+        text-anchor="middle">PRODUCT</text>
+
+      <text class="vc-a"
+        x="294" y="86"
+        fill="rgba(255,255,255,.48)"
+        font-family="DM Sans,sans-serif"
+        font-size="9.5" font-weight="700" letter-spacing="2.5"
+        text-anchor="middle">AI</text>
+
+      <text class="vc-d"
+        x="180" y="358"
+        fill="rgba(255,255,255,.48)"
+        font-family="DM Sans,sans-serif"
+        font-size="9.5" font-weight="700" letter-spacing="2.5"
+        text-anchor="middle">RESEARCH</text>
+
+      <!-- Caption -->
+      <text
+        x="180" y="400"
+        fill="rgba(255,255,255,.45)"
+        font-family="DM Sans,sans-serif"
+        font-size="11" font-weight="500" letter-spacing=".5"
+        text-anchor="middle">Where I work: product judgment, AI fluency, user research.</text>
+    </svg>
+  </div>
+
+  <!-- Work experience tile -->
+  <div class="tile bg-green pad hov" onclick="openPage('experience')" style="min-height:0;display:flex;flex-direction:column;">
+    <div class="tag">Selected Work</div>
+    <div class="h1" style="margin-bottom:.8rem;">Experience</div>
+    <p class="body-text" style="flex:1;">Roles across agentic AI, growth experimentation, and enterprise product delivery.</p>
+    <button class="oasis-link" style="align-self:flex-start;cursor:pointer;border:none;margin-top:auto;" onclick="event.stopPropagation();openPage('experience')">Full history <span class="oasis-arrow">↗</span></button>
+    <div class="arr">↗</div>
+  </div>
+
+</div><!-- /work row -->
+<div style="height:var(--gap)"></div>
+
+<!-- ── ROW 3: MEMO + COURSES + BUILDING ── -->
+<div class="grid" id="memo">
+
+  <div class="tile bg-blue pad hov" onclick="openPage('projects')" style="display:flex;flex-direction:column;">
+    <div class="tag" style="color:var(--yellow);">Currently Building 🔨</div>
+    <div style="margin-top:1rem;font-family:var(--serif);font-style:italic;font-weight:700;font-size:clamp(1.5rem,3vw,2.3rem);color:var(--yellow);line-height:1.1;margin-bottom:1rem;">
+      The Workshop.
+    </div>
+    <p class="body-text" style="color:rgba(255,255,255,.75);flex:1;">Things I've built and things in progress — where I use AI to solve my own problems. Starting with a system that automates my job search.</p>
+    <div class="arr" style="background:var(--yellow);color:var(--black);">↗</div>
+  </div>
+
+  <div class="tile bg-red pad hov" onclick="openPage('casestudies')" style="display:flex;flex-direction:column;">
+    <div class="tag dk">Projects</div>
+    <div class="h1" style="font-size:1.4rem;margin-bottom:.8rem;color:var(--black);">Case Studies<br>&amp; Projects</div>
+    <p class="body-text body-dark" style="flex:1;">Strategy, design thinking, marketing, and purpose-driven work. Real cases solved across my Duke MEM.</p>
+    <button class="oasis-link" style="align-self:flex-start;cursor:pointer;border:none;margin-top:auto;background:var(--black);color:var(--yellow);" onclick="event.stopPropagation();openPage('casestudies')">View all <span class="oasis-arrow">↗</span></button>
+    <div class="arr" style="background:var(--black);color:var(--yellow);">↗</div>
+  </div>
+
+  <!-- How I Work accordion tile -->
+  <div class="tile bg-dark" style="padding:1.8rem 2rem 1.4rem;display:flex;flex-direction:column;cursor:default;">
+    <div class="tag" style="margin-bottom:.7rem;">Skills &amp; Method</div>
+    <div style="font-family:var(--serif);font-weight:700;font-size:clamp(1rem,1.6vw,1.3rem);line-height:1.2;margin-bottom:.9rem;color:#fff;">How I Work.<br>What I Bring.</div>
+
+    <div style="flex:1;display:flex;flex-direction:column;">
+
+      <!-- 01 Discover -->
+      <div class="hw-phase" id="hw-phase-1">
+        <button class="hw-header hw-open" onclick="hwToggle(1)" onkeydown="if(e.key==='Enter'||e.key===' '){e.preventDefault();hwToggle(1)}" aria-expanded="true">
+          <span class="hw-num" style="color:#1a3fc7;">01</span>
+          <span class="hw-name">Discover</span>
+          <span class="hw-chevron">▾</span>
+        </button>
+        <div class="hw-content open" id="hw-content-1">
+          <p class="hw-desc">Find the real problem, not the stated one.</p>
+          <div class="hw-chips">
+            <span class="hw-chip ab">Customer discovery</span><span class="hw-chip ab">User interviews</span><span class="hw-chip ab">Jobs-to-be-Done</span><span class="hw-chip ab">Opportunity sizing</span><span class="hw-chip ab">Competitive analysis</span><span class="hw-chip ab">Problem framing</span><span class="hw-chip ab">Market research</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 02 Define -->
+      <div class="hw-phase" id="hw-phase-2">
+        <button class="hw-header" onclick="hwToggle(2)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();hwToggle(2)}" aria-expanded="false">
+          <span class="hw-num" style="color:#e2211c;">02</span>
+          <span class="hw-name">Define</span>
+          <span class="hw-chevron">▾</span>
+        </button>
+        <div class="hw-content" id="hw-content-2">
+          <p class="hw-desc">Turn ambiguity into something a team can build.</p>
+          <div class="hw-chips">
+            <span class="hw-chip ar">Product strategy</span><span class="hw-chip ar">PRDs &amp; specs</span><span class="hw-chip ar">Roadmap development</span><span class="hw-chip ar">Prioritization</span><span class="hw-chip ar">Scoping &amp; tradeoffs</span><span class="hw-chip ar">Acceptance criteria</span><span class="hw-chip ar">Vision &amp; narrative</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 03 Instrument -->
+      <div class="hw-phase" id="hw-phase-3">
+        <button class="hw-header" onclick="hwToggle(3)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();hwToggle(3)}" aria-expanded="false">
+          <span class="hw-num" style="color:#1fb141;">03</span>
+          <span class="hw-name">Instrument</span>
+          <span class="hw-chevron">▾</span>
+        </button>
+        <div class="hw-content" id="hw-content-3">
+          <p class="hw-desc">Build the measurement before forming the opinion.</p>
+          <div class="hw-chips">
+            <span class="hw-chip ag">Metrics &amp; KPIs</span><span class="hw-chip ag">Telemetry design</span><span class="hw-chip ag">A/B testing</span><span class="hw-chip ag">Funnel analysis</span><span class="hw-chip ag">Cohort analysis</span><span class="hw-chip ag">Dashboards</span><span class="hw-chip ag">Hypothesis design</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 04 Decide -->
+      <div class="hw-phase" id="hw-phase-4">
+        <button class="hw-header" onclick="hwToggle(4)" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();hwToggle(4)}" aria-expanded="false">
+          <span class="hw-num" style="color:#f5d016;">04</span>
+          <span class="hw-name">Decide</span>
+          <span class="hw-chevron">▾</span>
+        </button>
+        <div class="hw-content" id="hw-content-4">
+          <p class="hw-desc">Let evidence settle the argument, then align everyone behind it.</p>
+          <div class="hw-chips">
+            <span class="hw-chip ay">Data-driven prioritization</span><span class="hw-chip ay">Stakeholder alignment</span><span class="hw-chip ay">Cross-functional leadership</span><span class="hw-chip ay">Go/no-go decisions</span><span class="hw-chip ay">Exec communication</span><span class="hw-chip ay">Risk assessment</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="hw-closing">Different companies, same loop. Instinct starts the product, evidence ships it.</div>
+  </div>
+
+</div><!-- /memo -->
+<div style="height:var(--gap)"></div>
+
+<!-- ── ROW 4: OASIS / CURRENTLY / NEXT CHAPTER ── -->
+<div class="grid">
+
+  <!-- Tile 1: Oasis / Recent Work -->
+  <div class="tile bg-green pad hov" onclick="openPage('oasis')" style="display:flex;flex-direction:column;">
+    <div class="r3-tag" style="color:var(--yellow);">Recent Work</div>
+    <div class="oasis-headline">Oasis: The agentic<br>browser that <em>learns</em></div>
+    <p class="oasis-body" style="flex:1;">I led AI product management for Oasis — building the feedback loop that made it smarter with every user correction.</p>
+    <div style="display:flex;align-items:center;gap:.8rem;margin-top:auto;flex-wrap:wrap;">
+      <button class="oasis-link" style="cursor:pointer;border:none;" onclick="event.stopPropagation();openPage('oasis')">Deep dive <span class="oasis-arrow">↗</span></button>
+      <a href="https://kahana.io/?ref=producthunt" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.45);text-decoration:none;transition:color .2s;" onmouseenter="this.style.color='#fff'" onmouseleave="this.style.color='rgba(255,255,255,.45)'">See it live ↗</a>
+    </div>
+    <div class="arr">↗</div>
+  </div>
+
+  <!-- Tile 2: Currently -->
+  <div class="tile bg-dark pad hov" onclick="openPage('currently')" style="display:flex;flex-direction:column;">
+    <div class="r3-tag" style="color:rgba(255,255,255,.4);">Right Now</div>
+    <div class="cur-headline">Currently<span class="cur-cursor"></span></div>
+    <div class="cur-list">
+      <div class="cur-item">
+        <span class="cur-emoji">📖</span>
+        <span><span class="cur-label">Reading —</span> The Anthropologists</span>
+      </div>
+      <div class="cur-item">
+        <span class="cur-emoji">🎧</span>
+        <span><span class="cur-label">Listening to —</span> If I Go, I'm Goin</span>
+      </div>
+      <div class="cur-item">
+        <span class="cur-emoji">🛠</span>
+        <span><span class="cur-label">Building —</span> A job search automation workflow</span>
+      </div>
+      <div class="cur-item">
+        <span class="cur-emoji">🧠</span>
+        <span><span class="cur-label">Wondering —</span> How many passport stamps I can collect before 30</span>
+      </div>
+    </div>
+    <div class="cur-stamp">Updated May 2026</div>
+    <button class="oasis-link" style="margin-top:1.2rem;cursor:pointer;border:none;align-self:flex-start;" onclick="event.stopPropagation();openPage('currently')">See more <span class="oasis-arrow">↗</span></button>
+  </div>
+
+  <!-- Tile 3: What I'm looking for -->
+  <div class="tile bg-blue pad" style="display:flex;flex-direction:column;">
+    <div class="r3-tag" style="color:var(--yellow);">Next Chapter</div>
+    <div class="next-headline">Not just a job.<br>A place to belong.</div>
+    <p class="next-body">
+      Somewhere the work matters and I'm proud of what ships.<br><br>
+      I bring <strong>curiosity, hunger,</strong> and the kind of <strong>stubbornness that doesn't quit</strong> until the thing works. If your team builds things worth building, let's talk.
+    </p>
+    <a href="mailto:aishwarya.shetiya@gmail.com" class="next-cta" style="text-decoration:none;" onclick="event.stopPropagation()">Let's talk</a>
+  </div>
+
+</div><!-- /row 4 -->
+
+<!-- ── TOOLKIT ── -->
+<div class="sec-rule">
+  <div class="rule-line"></div>
+  <div class="rule-text">Toolkit</div>
+  <div class="rule-line"></div>
+</div>
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <!-- set 1 -->
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=figma.com&sz=128" alt="Figma"/></span><span class="tool-label">Figma</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=notion.so&sz=128" alt="Notion"/></span><span class="tool-label">Notion</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=jira.atlassian.com&sz=128" alt="Jira"/></span><span class="tool-label">Jira</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=miro.com&sz=128" alt="Miro"/></span><span class="tool-label">Miro</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=mixpanel.com&sz=128" alt="Mixpanel"/></span><span class="tool-label">Mixpanel</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="tableau.png" alt="Tableau"/></span><span class="tool-label">Tableau</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="sql_logo.png" alt="SQL"/></span><span class="tool-label">SQL</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=claude.ai&sz=128" alt="Claude"/></span><span class="tool-label">Claude</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="ChatGPT_Logo.png" alt="ChatGPT"/></span><span class="tool-label">ChatGPT</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=cursor.com&sz=128" alt="Cursor"/></span><span class="tool-label">Cursor</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="lovable.png" alt="Lovable"/></span><span class="tool-label">Lovable</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=hubspot.com&sz=128" alt="HubSpot"/></span><span class="tool-label">HubSpot</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="excel_logo.png" alt="Excel"/></span><span class="tool-label">Excel</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=n8n.io&sz=128" alt="n8n"/></span><span class="tool-label">n8n</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=apify.com&sz=128" alt="Apify"/></span><span class="tool-label">Apify</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=analytics.google.com&sz=128" alt="GA4"/></span><span class="tool-label">GA4</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=powerbi.microsoft.com&sz=128" alt="Power BI"/></span><span class="tool-label">Power BI</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=confluence.atlassian.com&sz=128" alt="Confluence"/></span><span class="tool-label">Confluence</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=amplitude.com&sz=128" alt="Amplitude"/></span><span class="tool-label">Amplitude</span></div>
+    <!-- set 2 (duplicate for seamless loop) -->
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=figma.com&sz=128" alt="Figma"/></span><span class="tool-label">Figma</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=notion.so&sz=128" alt="Notion"/></span><span class="tool-label">Notion</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=jira.atlassian.com&sz=128" alt="Jira"/></span><span class="tool-label">Jira</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=miro.com&sz=128" alt="Miro"/></span><span class="tool-label">Miro</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=mixpanel.com&sz=128" alt="Mixpanel"/></span><span class="tool-label">Mixpanel</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="tableau.png" alt="Tableau"/></span><span class="tool-label">Tableau</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="sql_logo.png" alt="SQL"/></span><span class="tool-label">SQL</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=claude.ai&sz=128" alt="Claude"/></span><span class="tool-label">Claude</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="ChatGPT_Logo.png" alt="ChatGPT"/></span><span class="tool-label">ChatGPT</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=cursor.com&sz=128" alt="Cursor"/></span><span class="tool-label">Cursor</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="lovable.png" alt="Lovable"/></span><span class="tool-label">Lovable</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=hubspot.com&sz=128" alt="HubSpot"/></span><span class="tool-label">HubSpot</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="excel_logo.png" alt="Excel"/></span><span class="tool-label">Excel</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=n8n.io&sz=128" alt="n8n"/></span><span class="tool-label">n8n</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=apify.com&sz=128" alt="Apify"/></span><span class="tool-label">Apify</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=analytics.google.com&sz=128" alt="GA4"/></span><span class="tool-label">GA4</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=powerbi.microsoft.com&sz=128" alt="Power BI"/></span><span class="tool-label">Power BI</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=confluence.atlassian.com&sz=128" alt="Confluence"/></span><span class="tool-label">Confluence</span></div>
+    <div class="tool-tile"><span class="tool-icon"><img src="https://www.google.com/s2/favicons?domain=amplitude.com&sz=128" alt="Amplitude"/></span><span class="tool-label">Amplitude</span></div>
+  </div>
+</div>
+<div style="height:var(--gap)"></div>
+
+<!-- ── VAULT ── -->
+
+<!-- ── AISH'S CORNER ── -->
+<div class="sec-rule">
+  <div class="rule-line"></div>
+  <div class="rule-text">Aish's Corner</div>
+  <div class="rule-line"></div>
+</div>
+<div class="corner-grid">
+
+  <!-- Tile 1: Coffee -->
+  <div class="corner-tile">
+    <svg class="corner-anim" viewBox="0 0 60 58" fill="none">
+      <!-- steam -->
+      <path class="steam-a s1" d="M17 26 Q14 20 17 13" stroke="rgba(255,255,255,.55)" stroke-width="2" stroke-linecap="round"/>
+      <path class="steam-a s2" d="M26 26 Q23 20 26 13" stroke="rgba(255,255,255,.55)" stroke-width="2" stroke-linecap="round"/>
+      <path class="steam-a s3" d="M35 26 Q32 20 35 13" stroke="rgba(255,255,255,.55)" stroke-width="2" stroke-linecap="round"/>
+      <!-- cup body -->
+      <rect x="8" y="28" width="36" height="22" rx="3" fill="var(--yellow)"/>
+      <!-- handle -->
+      <path d="M44 33 Q56 33 56 42 Q56 51 44 50" stroke="var(--yellow)" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- saucer -->
+      <ellipse cx="26" cy="52" rx="21" ry="4" fill="rgba(245,208,22,.2)"/>
+    </svg>
+    <span class="corner-lbl">Coffee Order</span>
+    <div class="corner-h">My coffee order changes every 3 months.</div>
+    <div class="corner-sub">There's always a new obsession, a retired favorite, and something experimental I'm not sure about yet. Want to know the current one? Just ask. I have opinions.</div>
+  </div>
+
+  <!-- Tile 2: Clapperboard -->
+  <div class="corner-tile">
+    <svg class="corner-anim" viewBox="0 0 60 58" fill="none">
+      <!-- board body -->
+      <rect x="6" y="20" width="48" height="32" rx="3" fill="var(--blue)"/>
+      <line x1="12" y1="30" x2="48" y2="30" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
+      <line x1="12" y1="38" x2="48" y2="38" stroke="rgba(255,255,255,.18)" stroke-width="1.5"/>
+      <!-- text lines on board -->
+      <rect x="12" y="44" width="24" height="2" rx="1" fill="rgba(255,255,255,.12)"/>
+      <!-- clapper arm -->
+      <g class="clapper-arm">
+        <rect x="6" y="9" width="48" height="13" rx="2" fill="#fff"/>
+        <rect x="6" y="9" width="13" height="13" fill="#111"/>
+        <rect x="29" y="9" width="13" height="13" fill="#111"/>
+      </g>
+      <!-- hinge -->
+      <circle cx="6" cy="20" r="3" fill="rgba(255,255,255,.35)"/>
+    </svg>
+    <span class="corner-lbl">After Hours</span>
+    <div class="corner-h">I will judge your watchlist (lovingly).</div>
+    <div class="corner-sub">Movies are my love language and true crime is my guilty expertise. If you've got a rec, I probably already watched it. If you haven't seen mine, we need to fix that. DMs are open.</div>
+  </div>
+
+  <!-- Tile 3: Cookie -->
+  <div class="corner-tile">
+    <svg class="corner-anim" viewBox="0 0 60 60" fill="none">
+      <g class="cookie-spin">
+        <circle cx="30" cy="30" r="24" fill="#c8813a"/>
+        <circle cx="30" cy="30" r="24" stroke="#a6622a" stroke-width="2.5" fill="none"/>
+        <ellipse cx="22" cy="22" rx="4.5" ry="3.5" fill="#5c3317" transform="rotate(-15 22 22)"/>
+        <ellipse cx="39" cy="25" rx="4.5" ry="3.5" fill="#5c3317" transform="rotate(12 39 25)"/>
+        <ellipse cx="27" cy="39" rx="4" ry="3.5" fill="#5c3317" transform="rotate(-8 27 39)"/>
+        <ellipse cx="18" cy="36" rx="3.5" ry="2.8" fill="#5c3317"/>
+        <ellipse cx="40" cy="40" rx="3.5" ry="2.8" fill="#5c3317" transform="rotate(20 40 40)"/>
+        <ellipse cx="23" cy="19" rx="5" ry="3" fill="rgba(255,255,255,.09)" transform="rotate(-20 23 19)"/>
+      </g>
+    </svg>
+    <span class="corner-lbl">Weekends</span>
+    <div class="corner-h">My apartment smells like cookies by Saturday noon.</div>
+    <div class="corner-sub">I love baking for people. If you're nearby on a weekend, there's a solid chance something's in the oven. Best decisions are made while waiting for dough to rise.</div>
+  </div>
+
+  <!-- Tile 4: Gelato -->
+  <div class="corner-tile">
+    <svg class="corner-anim" viewBox="0 0 60 64" fill="none">
+      <!-- cone -->
+      <path d="M18 36 L30 62 L42 36 Z" fill="#e8b87d"/>
+      <line x1="30" y1="62" x2="24" y2="40" stroke="#c9944e" stroke-width="1" opacity=".6"/>
+      <line x1="30" y1="62" x2="36" y2="40" stroke="#c9944e" stroke-width="1" opacity=".6"/>
+      <line x1="22" y1="46" x2="38" y2="46" stroke="#c9944e" stroke-width="1" opacity=".4"/>
+      <line x1="19" y1="53" x2="41" y2="53" stroke="#c9944e" stroke-width="1" opacity=".4"/>
+      <!-- scoop -->
+      <circle cx="30" cy="24" r="16" fill="#f9c1d0"/>
+      <circle cx="21" cy="29" r="10" fill="#f4a7bb"/>
+      <circle cx="39" cy="29" r="10" fill="#f4a7bb"/>
+      <!-- drip -->
+      <path class="gelato-drip" d="M38 33 Q40 40 39 48" stroke="#f4a7bb" stroke-width="3.5" stroke-linecap="round"/>
+      <!-- shine -->
+      <circle cx="24" cy="17" r="4" fill="rgba(255,255,255,.22)"/>
+    </svg>
+    <span class="corner-lbl">Open Invite</span>
+    <div class="corner-h">Same city? Let's go find the best gelato.</div>
+    <div class="corner-sub">Always hunting for the next great food spot or hole-in-the-wall. If you're local and like exploring, I'm the friend who always says yes.</div>
+  </div>
+
+</div>
+
+</div><!-- /wrap -->
+
+<!-- ══════════════════════════════
+     FOOTER
+══════════════════════════════ -->
+<button id="back-top" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<footer class="footer" id="contact">
+  <div class="nl-wrap">
+    <div class="nl-h">You scrolled all the way down. Let's talk.</div>
+    <p class="nl-sub">I'm actively looking for my next role. If you're building something interesting and need someone who cares about the why as much as the what, I'd love to hear from you.<br><br>Or if you just want to chat about product, AI, a side project, or the best gelato in your city, I'm always up for a good conversation.</p>
+    <div class="footer-links">
+      <a href="mailto:aishwarya.shetiya@gmail.com" class="footer-link">Email Me</a>
+      <span class="footer-link-dot">·</span>
+      <a href="https://www.linkedin.com/in/aishwaryashetiya" target="_blank" rel="noopener" class="footer-link">LinkedIn</a>
+      <span class="footer-link-dot">·</span>
+      <a href="https://calendly.com/aishwarya-shetiya/30min" target="_blank" rel="noopener" class="footer-link">Schedule a Chat</a>
+    </div>
+
+    <form class="cf" id="contact-form" novalidate>
+      <div class="cf-row">
+        <div class="cf-field">
+          <label class="cf-label" for="cf-name">Name</label>
+          <input class="cf-input" id="cf-name" name="name" type="text" placeholder="Your name" required/>
+        </div>
+        <div class="cf-field">
+          <label class="cf-label" for="cf-email">Email</label>
+          <input class="cf-input" id="cf-email" name="email" type="email" placeholder="your@email.com" required/>
+        </div>
+      </div>
+      <div class="cf-field">
+        <label class="cf-label" for="cf-message">Message</label>
+        <textarea class="cf-textarea" id="cf-message" name="message" placeholder="What's on your mind?" required></textarea>
+      </div>
+      <button class="cf-submit" id="cf-btn" type="submit">Send Message</button>
+      <div class="cf-msg" id="cf-ok" role="status">Thanks, your message is on its way.</div>
+      <div class="cf-msg err" id="cf-err" role="alert">Something went wrong — please try emailing me directly at aishwarya.shetiya@gmail.com.</div>
+    </form>
+  </div>
+  <div class="footer-tagline">Building Things, Breaking Rules,<br>Fueled by Spark</div>
+  <div class="footer-copy">© Aishwarya Shetiya · All logic, product &amp; creativity reserved.</div>
+</footer>
+
+<!-- ══════════════════════════════
+     MODALS
+══════════════════════════════ -->
+
+<!-- About -->
+<div class="overlay" id="m-about">
+  <div class="modal">
+    <button class="modal-x" onclick="closeM('about')">✕</button>
+    <div class="modal-tag">About</div>
+    <h2 class="modal-h">Product Manager &amp;<br>Builder</h2>
+    <div class="modal-body">
+      <p>I'm Aishwarya Shetiya, a product manager with a Master of Engineering Management from Duke University and a passion for building products that move from idea to impact. From AI-native agentic tools to enterprise SaaS systems, I've worked across the full product spectrum.</p>
+      <br>
+      <p>I care about the "why" as much as the "what." Every product decision should trace back to a real human need or a clear business outcome. Not everything needs a brief, but every product needs a why.</p>
+      <br>
+      <p><strong>Education:</strong></p>
+      <p>Duke University, Master of Engineering Management, MEM (2024–2026)</p>
+      <p>Pune University, Electronics and Telecommunication Engineering (2018–2022)</p>
+      <br>
+      <p><strong>Currently:</strong> Open to product &amp; strategy roles · Open to Interview</p>
+    </div>
+  </div>
+</div>
+
+<!-- Work -->
+<div class="overlay" id="m-work">
+  <div class="modal">
+    <button class="modal-x" onclick="closeM('work')">✕</button>
+    <div class="modal-tag">Experience</div>
+    <h2 class="modal-h">Full Work History</h2>
+    <div class="modal-body">
+      <div class="exp-list">
+        <div class="exp-row">
+          <div class="exp-head"><div><div class="exp-role">AI Product Manager</div><div class="exp-co">Kahana Group Inc.</div></div><div class="exp-period">Sep 2025–Apr 2026</div></div>
+          <div class="exp-blurb">Led product strategy for an agentic browser workspace. Wrote the PRD for intelligent hub grouping, a feature that lets users automatically organize their browsing by project context. Partnered with engineering on telemetry design and shipped to early access users.</div>
+          <div class="chips"><span class="chip">Agentic AI</span><span class="chip">PRD</span><span class="chip">0→1</span><span class="chip">Telemetry</span><span class="chip">Figma</span></div>
+        </div>
+        <div class="exp-row">
+          <div class="exp-head"><div><div class="exp-role">Product Operations Intern</div><div class="exp-co">Kurated Learning LLC</div></div><div class="exp-period">May–Aug 2025</div></div>
+          <div class="exp-blurb">Built the experimentation engine from scratch, including weekly A/B testing cadences, GA4 event tracking, and a structured voice-of-customer workflow. Created the feedback loop that connected user behavior data directly to product prioritization decisions.</div>
+          <div class="chips"><span class="chip">GA4</span><span class="chip">Growth</span><span class="chip">A/B Tests</span><span class="chip">VoC</span></div>
+        </div>
+        <div class="exp-row">
+          <div class="exp-head"><div><div class="exp-role">Product Delivery Analyst</div><div class="exp-co">Infosys × FedEx</div></div><div class="exp-period">Aug 2022–Jul 2024</div></div>
+          <div class="exp-blurb">Directed Agile delivery for a global SAP ERP modernization spanning four business units. Managed sprint ceremonies, coordinated cross-functional dependencies, and drove stakeholder alignment across engineering, operations, and business teams.</div>
+          <div class="chips"><span class="chip">SAP ERP</span><span class="chip">Agile</span><span class="chip">Enterprise</span><span class="chip">Figma</span></div>
+        </div>
+        <div class="exp-row">
+          <div class="exp-head"><div><div class="exp-role">Student Consultant</div><div class="exp-co">Naitiv</div></div><div class="exp-period">2024</div></div>
+          <div class="exp-blurb">Conducted market sizing, competitive analysis, and GTM strategy for Naitiv's real-time video interpretation marketplace. Shaped product positioning and identified key entry points for early traction.</div>
+          <div class="chips"><span class="chip">Strategy</span><span class="chip">GTM</span><span class="chip">Consulting</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Project 1 -->
+<div class="overlay" id="m-p1">
+  <div class="modal">
+    <button class="modal-x" onclick="closeM('p1')">✕</button>
+    <div class="modal-tag">Project 01 · Agentic AI · B2B</div>
+    <h2 class="modal-h">Kahana — Agentic Browser Workspace</h2>
+    <div class="modal-body">
+      <p><strong>The Problem:</strong> Knowledge workers lose hours daily to tab chaos — no structure, no context, constant context switching.</p><br>
+      <p><strong>My Role:</strong> AI Product Manager — wrote the full PRD for hubs and intelligent tab grouping, defined success metrics, drove beta launch.</p><br>
+      <p><strong>The Outcome:</strong> 40% tab reduction in beta, −30% rework cycles, 320 early-access signups. Shipped to production.</p><br>
+      <p><strong>Skills:</strong> Agentic AI product strategy, PRD writing, 0→1 product, user research, telemetry design, Figma.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Project 2 -->
+<div class="overlay" id="m-p2">
+  <div class="modal">
+    <button class="modal-x" onclick="closeM('p2')">✕</button>
+    <div class="modal-tag">Project 02 · Enterprise · SAP</div>
+    <h2 class="modal-h">Infosys × FedEx — ERP Modernisation</h2>
+    <div class="modal-body">
+      <p><strong>The Problem:</strong> FedEx's global logistics ERP was fragmented across 4+ business units, with slow delivery cycles and low adoption.</p><br>
+      <p><strong>My Role:</strong> Product Delivery Analyst — sprint planning, backlog refinement, stakeholder coordination across BUs globally.</p><br>
+      <p><strong>The Outcome:</strong> 1.3× faster delivery cycles, $1.5M in operational efficiency, +18% adoption across business units.</p><br>
+      <p><strong>Skills:</strong> SAP ERP, Agile, Scrum, Figma, enterprise stakeholder management, cross-functional delivery.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Project 3 -->
+<div class="overlay" id="m-p3">
+  <div class="modal">
+    <button class="modal-x" onclick="closeM('p3')">✕</button>
+    <div class="modal-tag">Project 03 · Strategy · Startup</div>
+    <h2 class="modal-h">Naitiv — Growth Strategy</h2>
+    <div class="modal-body">
+      <p><strong>Context:</strong> Naitiv is a marketplace startup. I joined as a product strategy consultant to help with positioning and growth planning.</p><br>
+      <p><strong>Work:</strong> Market sizing, competitive analysis, GTM strategy, growth lever identification, and product positioning.</p><br>
+      <p><strong>Skills:</strong> Market research, product strategy, GTM planning, consulting frameworks, competitive analysis.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Play -->
+<div class="overlay" id="m-play">
+  <div class="modal">
+    <button class="modal-x" onclick="closeM('play')">✕</button>
+    <div class="modal-tag">Play</div>
+    <h2 class="modal-h">Side Projects &amp; Experiments</h2>
+    <div class="modal-body">
+      <p><strong>Job Automation Project</strong> (Currently Building) — Using AI to automate and streamline the job search &amp; application process. Yes, I'm automating the exact thing I'm actively doing.</p><br>
+      <p><strong>Baking Data Project</strong> — Tracking baking experiments, ingredient substitutions, and success rates as a data project. Turns out baking is just product testing with flour.</p><br>
+      <p><strong>Travel Tracker</strong> — A personal tool to map, plan, and document international travel adventures. The backlog is growing faster than the trip count.</p><br>
+      <p style="color:rgba(255,255,255,.35);font-size:.76rem;">More coming soon — subscribe to the newsletter to stay updated. ↗</p>
+    </div>
+  </div>
+</div>
+
+<!-- Memo -->
+<div class="overlay" id="m-memo">
+  <div class="modal">
+    <button class="modal-x" onclick="closeM('memo')">✕</button>
+    <div class="modal-tag">Memo</div>
+    <h2 class="modal-h">Notes &amp; Observations</h2>
+    <div class="modal-body">
+      <p>Unpolished thoughts on product, AI, creativity, and the occasional jugaad fix. This section is a work in progress — I'm building a space for these somewhere you can actually read them.</p><br>
+      <p style="color:rgba(255,255,255,.4);font-size:.78rem;">Check back soon. Good things take time.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Courses -->
+<div class="overlay" id="m-courses">
+  <div class="modal">
+    <button class="modal-x" onclick="closeM('courses')">✕</button>
+    <div class="modal-tag">MBA · Duke Fuqua</div>
+    <h2 class="modal-h">Course Projects</h2>
+    <div class="modal-body">
+      <div class="exp-list">
+        <div class="exp-row">
+          <div class="exp-role" style="color:var(--yellow);font-size:.9rem;margin-bottom:.4rem;">Competitive Strategies</div>
+          <div class="exp-blurb">Strategic analysis and competitive positioning — exploring how firms create and sustain competitive advantage in dynamic markets.</div>
+          <div class="chips"><span class="chip">Strategy</span><span class="chip">Frameworks</span><span class="chip">Analysis</span></div>
+        </div>
+        <div class="exp-row">
+          <div class="exp-role" style="color:var(--yellow);font-size:.9rem;margin-bottom:.4rem;">Marketing Strategy</div>
+          <div class="exp-blurb">Consumer insights, brand positioning, and go-to-market planning in modern digital and B2B contexts.</div>
+          <div class="chips"><span class="chip">GTM</span><span class="chip">Consumer Research</span><span class="chip">Positioning</span></div>
+        </div>
+        <div class="exp-row">
+          <div class="exp-role" style="color:var(--yellow);font-size:.9rem;margin-bottom:.4rem;">Design Thinking</div>
+          <div class="exp-blurb">Human-centered design process — from empathy mapping and problem definition to rapid prototyping and user testing.</div>
+          <div class="chips"><span class="chip">HCD</span><span class="chip">Prototyping</span><span class="chip">User Research</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Currently Building -->
+<div class="overlay" id="m-building">
+  <div class="modal">
+    <button class="modal-x" onclick="closeM('building')">✕</button>
+    <div class="modal-tag">Currently Building</div>
+    <h2 class="modal-h">Job Automation Project</h2>
+    <div class="modal-body">
+      <p>I'm building an AI-powered system to automate and streamline the job search and application process — ironically, while actively job searching.</p><br>
+      <p>The project explores: intelligent job matching against my profile, automated application tailoring, smart outreach drafts, and a unified tracking pipeline.</p><br>
+      <p>It's part side project, part productivity tool, part PM dogfooding exercise. More details coming soon.</p><br>
+      <p style="color:rgba(255,255,255,.4);font-size:.78rem;">More updates soon as I publish the workflows.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Vault -->
+<div class="overlay" id="m-vault">
+  <div class="modal">
+    <button class="modal-x" onclick="closeM('vault')">✕</button>
+    <div class="modal-tag">Vault</div>
+    <h2 class="modal-h">Templates &amp; Resources</h2>
+    <div class="modal-body">
+      <p>A curated collection of frameworks, templates, and PM tools I've built or collected for fellow builders. Coming soon.</p><br>
+      <p style="color:rgba(255,255,255,.4);font-size:.78rem;">Subscribe to the newsletter to be notified when the Vault opens.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SUB-PAGES
+══════════════════════════════ -->
+
+<!-- SUB-PAGE: Experience -->
+<div class="subpage" id="sp-experience">
+  <div class="sp-topbar">
+    <button class="sp-back" onclick="closePage('experience')"><span class="sp-back-arrow">←</span> Back</button>
+    <span class="sp-title">Experience</span>
+    <span></span>
+  </div>
+  <div class="sp-inner">
+    <div class="sp-hero-tag">Selected Work</div>
+    <h1 class="sp-h">Where I've Been,<br>What I've Built</h1>
+    <p class="sp-lead">Roles across agentic AI, growth experimentation, and enterprise product delivery. Each one taught me something the last one couldn't.</p>
+
+    <!-- ── Kahana ── -->
+    <div class="sp-exp-card">
+      <div class="sp-exp-header">
+        <div>
+          <div class="sp-exp-role">AI Product Manager</div>
+          <div class="sp-exp-co">Kahana Group Inc.</div>
+          <div class="sp-exp-co-desc">Kahana builds Oasis, an agentic AI browser that organizes, plans, and acts on your tabs.</div>
+        </div>
+        <div class="sp-exp-period">Sep 2025 to Apr 2026</div>
+      </div>
+
+      <div class="sp-exp-mstrip">
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">320</span><span class="sp-exp-ml">Early-Access Signups</span></div>
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">40%</span><span class="sp-exp-ml">Tab Reduction</span></div>
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">22</span><span class="sp-exp-ml">Demos Run</span></div>
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">-45%</span><span class="sp-exp-ml">Rework Cut</span></div>
+      </div>
+
+      <p class="sp-exp-setup ay">When I joined, the product had ambition but no structured way to learn from the people using it. Every time a user disagreed with the AI, that signal disappeared.</p>
+
+      <p class="sp-exp-body">I owned the product definition for intelligent hub grouping, the feature that let Oasis automatically organize a user's browsing by project context. That meant writing the PRD, defining edge cases, and building a telemetry framework so we could observe what happened when AI suggested a grouping and a user overrode it. Every override became a learning signal fed back into the model.</p>
+      <p class="sp-exp-body">I sat with early users while they browsed, watched them think out loud about why they moved a tab the AI had placed, and turned those observations into product refinements. On the growth side, I ran landing page experiments and 22 targeted demos that brought in 320 early-access signups before we had launched publicly.</p>
+
+      <p class="sp-exp-sowhat">The product got measurably smarter from user corrections. What I really built was the feedback loop itself. The system that made the AI better every time a human disagreed with it.</p>
+
+      <div class="sp-exp-tools">
+        <span class="sp-exp-tools-label">Tools</span>
+        <span class="sp-exp-tool">Figma</span><span class="sp-exp-tool">Cursor</span><span class="sp-exp-tool">Claude</span><span class="sp-exp-tool">Playwright</span><span class="sp-exp-tool">Linear</span><span class="sp-exp-tool">Amplitude</span>
+      </div>
+      <div class="chips"><span class="chip">Agentic AI</span><span class="chip">PRD Writing</span><span class="chip">0→1 Product</span><span class="chip">Telemetry Design</span><span class="chip">Human-in-the-Loop</span></div>
+    </div>
+
+    <!-- ── Kurated ── -->
+    <div class="sp-exp-card">
+      <div class="sp-exp-header">
+        <div>
+          <div class="sp-exp-role">Product Operations Intern</div>
+          <div class="sp-exp-co">Kurated Learning LLC</div>
+          <div class="sp-exp-co-desc">Kurated is an EdTech platform that delivers corporate training content at scale.</div>
+        </div>
+        <div class="sp-exp-period">May to Aug 2025</div>
+      </div>
+
+      <div class="sp-exp-mstrip">
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">30%</span><span class="sp-exp-ml">Conversion Lift</span></div>
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">28%</span><span class="sp-exp-ml">Engagement Lift</span></div>
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">180</span><span class="sp-exp-ml">Qualified Signups</span></div>
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">12</span><span class="sp-exp-ml">Roadmap Decisions</span></div>
+      </div>
+
+      <p class="sp-exp-setup ag">Users were completing modules and not coming back. Nobody knew why. There was no system for collecting that signal, no process for acting on it, and no way to tell whether a product change had actually helped.</p>
+
+      <p class="sp-exp-body">I built the listening infrastructure from scratch. I designed an in-app feedback workflow, consolidated hundreds of raw data points into a tagged Notion system organized by theme and sentiment, and translated the patterns into specific UX changes: pacing adjustments, checkpoint quizzes, peer accountability nudges.</p>
+      <p class="sp-exp-body">I set up GA4 event tracking and weekly KPI reporting so that when we made changes, we could see whether they moved the numbers. Engagement lifted 28%. Conversion went up 30%. Twelve roadmap decisions traced directly back to findings from that workflow.</p>
+
+      <p class="sp-exp-sowhat">The voice-of-customer process I built became a standing operational system after I left. Before I arrived, the team made product decisions on instinct. After, they made them on evidence.</p>
+
+      <div class="sp-exp-tools">
+        <span class="sp-exp-tools-label">Tools</span>
+        <span class="sp-exp-tool">GA4</span><span class="sp-exp-tool">HubSpot</span><span class="sp-exp-tool">ClickUp</span><span class="sp-exp-tool">Tableau</span><span class="sp-exp-tool">Webflow</span><span class="sp-exp-tool">Excel</span>
+      </div>
+      <div class="chips"><span class="chip">Growth Ops</span><span class="chip">A/B Experimentation</span><span class="chip">VoC Research</span><span class="chip">KPI Reporting</span><span class="chip">Roadmap Planning</span></div>
+    </div>
+
+    <!-- ── Naitiv ── -->
+    <div class="sp-exp-card">
+      <div class="sp-exp-header">
+        <div>
+          <div class="sp-exp-role">Product Management Consultant</div>
+          <div class="sp-exp-co">Naitiv</div>
+          <div class="sp-exp-co-desc">Naitiv builds a real-time video interpretation platform for live multilingual calls.</div>
+        </div>
+        <div class="sp-exp-period">Aug to Dec 2024</div>
+      </div>
+
+      <div class="sp-exp-mstrip">
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">35+</span><span class="sp-exp-ml">User Interviews</span></div>
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">40%</span><span class="sp-exp-ml">Validation Cycle Reduction</span></div>
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">3</span><span class="sp-exp-ml">Features Sequenced</span></div>
+      </div>
+
+      <p class="sp-exp-setup ab">The technology worked. What nobody had figured out yet was who actually needed it and what their first five minutes with the product would look like. The team had intuitions. I went to find out.</p>
+
+      <p class="sp-exp-body">I ran 35+ user interviews. Not the scripted kind. The kind where you sit with the silence after a question and let the person find the real answer underneath the polished one. I synthesized what I heard into structured findings across workflow gaps, adoption barriers, and feature priorities, which directly shaped 3 critical sequencing decisions on the roadmap.</p>
+      <p class="sp-exp-body">Through cohort analysis, I found that the feature a vocal minority kept requesting was not the one that would move adoption for the broader base. I used the data to make the case for a different priority. We built the quieter, more fundamental thing instead.</p>
+
+      <p class="sp-exp-sowhat">I learned something at Naitiv that I carry into everything: what users say they want and what the evidence says they need are almost never the same thing. Knowing which one to build is the job.</p>
+
+      <div class="sp-exp-tools">
+        <span class="sp-exp-tools-label">Tools</span>
+        <span class="sp-exp-tool">Mixpanel</span><span class="sp-exp-tool">Dovetail</span><span class="sp-exp-tool">Maze</span><span class="sp-exp-tool">Zoom</span><span class="sp-exp-tool">Miro</span><span class="sp-exp-tool">Notion</span>
+      </div>
+      <div class="chips"><span class="chip">User Research</span><span class="chip">GTM Strategy</span><span class="chip">Cohort Analysis</span><span class="chip">Roadmap Sequencing</span><span class="chip">Consulting</span></div>
+    </div>
+
+    <!-- ── Infosys Limited ── -->
+    <div class="sp-exp-card">
+      <div class="sp-exp-header">
+        <div>
+          <div class="sp-exp-role">Product Delivery Analyst</div>
+          <div class="sp-exp-co">Infosys Limited</div>
+          <div class="sp-exp-co-desc">Embedded on a Fortune 500 logistics SAP ERP modernization across four business units.</div>
+        </div>
+        <div class="sp-exp-period">Aug 2022 to Jul 2024</div>
+      </div>
+
+      <div class="sp-exp-mstrip">
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">$1.5M</span><span class="sp-exp-ml">Efficiency Gains</span></div>
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">18%</span><span class="sp-exp-ml">Adoption Lift</span></div>
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">1.3×</span><span class="sp-exp-ml">Faster Releases</span></div>
+        <div class="sp-exp-mstrip-cell"><span class="sp-exp-mn">60+</span><span class="sp-exp-ml">Duplicates Removed</span></div>
+      </div>
+
+      <p class="sp-exp-setup ar">Requirements were shifting faster than engineering could track. Jira had 60+ duplicate tickets, unclear owners, and no line of sight from epics to business goals. The team was working hard but not always on the right things.</p>
+
+      <p class="sp-exp-body">I sat at the junction between business stakeholders who understood what the logistics operation needed and engineers who understood what the system could do. I joined every client call and converted shifting requirements into Jira epics the same day so engineering was never building against stale specs. I restructured the entire Jira environment, removed those 60+ duplicates, linked every epic to a KPI, and clarified ownership across the board.</p>
+      <p class="sp-exp-body">When SAP UI5 adoption stalled, I did something nobody asked me to. I prototyped streamlined UI flows in Figma, ran usability tests, and converted the findings into training assets. Adoption rose 18% across all four business units. The issue was never the software. It was that people didn't know how to use it confidently.</p>
+
+      <p class="sp-exp-sowhat">The engagement delivered $1.5M in efficiency gains and accelerated release cycles 1.3x. The real lesson was simpler: clients need to feel informed and heard at every step. Proactive communication is the highest-leverage thing a PM can do for a team.</p>
+
+      <div class="sp-exp-tools">
+        <span class="sp-exp-tools-label">Tools</span>
+        <span class="sp-exp-tool">Jira</span><span class="sp-exp-tool">Confluence</span><span class="sp-exp-tool">SAP UI5</span><span class="sp-exp-tool">SQL</span><span class="sp-exp-tool">Power BI</span><span class="sp-exp-tool">Agile/Scrum</span>
+      </div>
+      <div class="chips"><span class="chip">Enterprise Delivery</span><span class="chip">Requirements Mgmt</span><span class="chip">Stakeholder Comms</span><span class="chip">Process Improvement</span><span class="chip">Usability Testing</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SUB-PAGE: Oasis -->
+<div class="subpage" id="sp-oasis">
+  <div class="sp-topbar">
+    <button class="sp-back" onclick="closePage('oasis')"><span class="sp-back-arrow">←</span> Back</button>
+    <span class="sp-title">Oasis · Case Study</span>
+    <span></span>
+  </div>
+  <div class="sp-inner">
+
+    <!-- HERO -->
+    <div class="sp-hero-tag">Recent Work · Agentic AI</div>
+    <h1 class="sp-h">Oasis: Where AI Meets<br>Real Users</h1>
+    <p class="sp-lead">An agentic browser that doesn't just chat beside your tabs. It plans, searches, and acts on them. I led product management and designed the feedback loop that made the AI smarter with every correction.</p>
+
+    <!-- Credibility ribbon -->
+    <div style="margin:-1rem 0 2.5rem;border:1px solid rgba(255,255,255,.1);border-left:3px solid var(--yellow);padding:1rem 1.4rem;display:flex;flex-direction:column;gap:.5rem;background:rgba(255,255,255,.03);">
+      <div style="font-family:var(--sans);font-size:.82rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65);">AI Product Manager · Kahana Group · Sep 2025 to Apr 2026</div>
+      <div style="font-family:var(--sans);font-size:.9rem;font-weight:500;color:rgba(255,255,255,.45);">The product now serves 7,000+ users across 108 countries.</div>
+    </div>
+
+    <!-- CTAs -->
+    <div style="display:flex;gap:1rem;margin-bottom:3rem;align-items:center;flex-wrap:wrap;">
+      <a href="https://kahana.io/?ref=producthunt" target="_blank" rel="noopener" class="oasis-link" style="display:inline-flex;">See it live <span class="oasis-arrow">↗</span></a>
+      <a href="#oasis-detail" class="oasis-link" style="display:inline-flex;">Deep dive <span class="oasis-arrow">↗</span></a>
+    </div>
+
+    <!-- Product screenshot -->
+    <div style="margin-bottom:3.5rem;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,.08);">
+      <img src="oasis-screenshot-1.png" alt="Oasis AI browser in use" style="width:100%;display:block;"/>
+    </div>
+
+    <!-- WHAT IS OASIS -->
+    <div id="oasis-detail">
+      <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">What Is Oasis</div><div class="sp-divider-line"></div></div>
+      <div class="sp-block">
+        <div class="sp-block-p">Oasis is an AI browser where the assistant is grounded in your actual tabs, history, and the page you're currently on. Not a chatbot bolted into a sidebar. It can find what you half-remember, summarize what you're reading, and act on your tabs through plain-language commands. It's built privacy-first: anonymized by default, with no user identity attached unless you choose to add it.</div>
+      </div>
+      <!-- Assistant in action screenshot -->
+      <div style="border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,.08);margin:1.5rem 0 3rem;">
+        <img src="oasis-screenshot-2.png" alt="Oasis AI assistant confirming a tab action" style="width:100%;display:block;"/>
+      </div>
+    </div>
+
+    <!-- THE PROBLEM -->
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">The Problem</div><div class="sp-divider-line"></div></div>
+    <div class="sp-block">
+      <div class="sp-block-p">Knowledge workers lose hours to tab chaos. No structure, no context, constant context-switching. Existing browsers are passive. They show you what's open but never help you understand what matters. The context lives in your head, not the tool. Intelligent hub grouping was the feature built to close that gap.</div>
+    </div>
+
+    <!-- MY ROLE -->
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">My Role</div><div class="sp-divider-line"></div></div>
+    <div class="sp-block">
+      <span class="sp-block-tag">AI Product Manager · Kahana Group · Sep 2025 to Apr 2026</span>
+      <div class="sp-block-p">I wrote the full PRD for intelligent hub grouping, the core feature that lets Oasis automatically organize tabs by project context. That meant going deep on how users actually navigate: when do they context-switch? When does AI-suggested grouping feel helpful vs. annoying?<br><br>I built the telemetry to observe how users reacted to AI-driven groupings, sat with them as they thought out loud, and turned every override into a learning signal. <strong style="color:rgba(255,255,255,.85);">The AI suggested. The user corrected. The product got smarter.</strong></div>
+    </div>
+
+    <!-- Feedback loop SVG -->
+    <div style="margin:2rem 0 3.5rem;">
+      <img src="../oasis-feedback-loop.svg" alt="The Oasis feedback loop: AI suggests, user corrects, telemetry captures, product improves" style="width:100%;border-radius:6px;display:block;"/>
+    </div>
+
+    <!-- HOW IT WORKS / WHAT I LEARNED -->
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">How It Works / What I Learned</div><div class="sp-divider-line"></div></div>
+
+    <div class="sp-block">
+      <div class="sp-block-h">Trust is won at the confirmation</div>
+      <div class="sp-block-p">We made the AI confirm before closing a tab, showing the exact command in plain language first. A small design decision, but giving an AI permission to act on your browser is precisely where trust is won or lost. Get that moment wrong and users never hand the AI anything that matters.</div>
+    </div>
+    <div class="sp-block">
+      <div class="sp-block-h">Privacy as architecture, not a setting</div>
+      <div class="sp-block-p">Privacy wasn't bolted on at the end. The default data payload carries no user ID. The assistant works without knowing who you are unless you choose to tell it. Building a feedback loop that learns from corrections without tying them to an identity is harder, and more interesting, than the version that just logs everything.</div>
+    </div>
+    <div class="sp-block">
+      <div class="sp-block-h">The override is the signal</div>
+      <div class="sp-block-p">Most products treat user disagreement as friction to remove. We treated it as the most valuable signal we had. Every time someone moved a tab out of an AI-suggested group, that correction told us something the model couldn't learn on its own. The product that listens to its corrections beats the product that never makes them.</div>
+    </div>
+
+    <!-- IMPACT -->
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">Impact</div><div class="sp-divider-line"></div></div>
+    <div class="sp-metrics">
+      <div class="sp-met"><span class="sp-met-n">40%</span><span class="sp-met-l">Tab Reduction in Beta</span></div>
+      <div class="sp-met"><span class="sp-met-n">320</span><span class="sp-met-l">Early-Access Signups</span></div>
+      <div class="sp-met"><span class="sp-met-n">22</span><span class="sp-met-l">Targeted Demos Run</span></div>
+      <div class="sp-met"><span class="sp-met-n">-45%</span><span class="sp-met-l">Rework Cycles</span></div>
+    </div>
+    <div style="font-size:.72rem;color:rgba(255,255,255,.45);font-weight:500;letter-spacing:.06em;margin-top:-.4rem;margin-bottom:2rem;text-align:center;">Internal beta metrics, measured against a pre-feature baseline.</div>
+
+    <!-- Product traction — visually distinct from personal metrics -->
+    <div style="border:1px solid rgba(255,255,255,.09);padding:1.1rem 1.4rem;border-radius:4px;margin-bottom:3.5rem;display:flex;align-items:center;gap:.9rem;">
+      <span style="width:3px;height:30px;background:var(--green);display:block;flex-shrink:0;border-radius:2px;"></span>
+      <div>
+        <div style="font-family:var(--sans);font-size:.5rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.3rem;">Product Traction (Kahana)</div>
+        <div style="font-size:.9rem;color:rgba(255,255,255,.72);font-weight:600;">Oasis now serves 7,000+ users across 108 countries.</div>
+      </div>
+    </div>
+
+    <!-- REFLECTION -->
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">Reflection</div><div class="sp-divider-line"></div></div>
+    <div class="sp-block" style="border-bottom:none;">
+      <div class="sp-block-p" style="font-family:var(--serif);font-style:italic;font-size:.96rem;color:rgba(255,255,255,.62);line-height:1.9;">The product got measurably smarter from user corrections. But what I really built was the feedback loop itself: the system that made the AI better every time a human disagreed with it. That's the thing I carry into every product now. The best products don't avoid being wrong; they're built to learn from it faster than anyone else.</div>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">Skills Used</div><div class="sp-divider-line"></div></div>
+    <div class="chips" style="gap:.6rem;flex-wrap:wrap;margin-bottom:3.5rem;">
+      <span class="chip" style="font-size:.72rem;padding:.4rem 1.1rem;">Agentic AI</span><span class="chip" style="font-size:.72rem;padding:.4rem 1.1rem;">PRD Writing</span><span class="chip" style="font-size:.72rem;padding:.4rem 1.1rem;">0→1 Product</span><span class="chip" style="font-size:.72rem;padding:.4rem 1.1rem;">User Research</span><span class="chip" style="font-size:.72rem;padding:.4rem 1.1rem;">Telemetry Design</span><span class="chip" style="font-size:.72rem;padding:.4rem 1.1rem;">Figma</span><span class="chip" style="font-size:.72rem;padding:.4rem 1.1rem;">Human-in-the-Loop</span>
+    </div>
+
+    <!-- FOOTER CTA -->
+    <div style="border-top:1px solid rgba(255,255,255,.07);padding-top:2rem;text-align:center;">
+      <a href="https://kahana.io/?ref=producthunt" target="_blank" rel="noopener" class="oasis-link" style="display:inline-flex;">See it live <span class="oasis-arrow">↗</span></a>
+    </div>
+
+  </div>
+</div>
+
+<!-- SUB-PAGE: Currently -->
+<div class="subpage" id="sp-currently">
+  <div class="sp-topbar">
+    <button class="sp-back" onclick="closePage('currently')"><span class="sp-back-arrow">←</span> Back</button>
+    <span class="sp-title">Currently</span>
+    <span></span>
+  </div>
+  <div class="sp-inner">
+    <div class="sp-hero-tag">Right Now</div>
+    <h1 class="sp-h">What I'm Up To</h1>
+    <p class="sp-lead">A living snapshot of what's on my mind, in my ears, and under my hands. Updated as things change.</p>
+
+    <div class="sp-block">
+      <span class="sp-block-tag">📖 Reading</span>
+      <div class="sp-block-h">The Anthropologists</div>
+      <div class="sp-block-p">A novel about fieldwork, belonging, and what it means to observe other lives. I find myself thinking about it between meetings.</div>
+    </div>
+    <div class="sp-block">
+      <span class="sp-block-tag">🎧 Listening</span>
+      <div class="sp-block-h">If I Go, I'm Goin — Gregory Alan Isakov</div>
+      <div class="sp-block-p">Perfect background music for deep work and slightly wistful Wednesday afternoons.</div>
+    </div>
+    <div class="sp-block">
+      <span class="sp-block-tag">🛠 Building</span>
+      <div class="sp-block-h">Job Search Automation Workflow</div>
+      <div class="sp-block-p">Using AI to streamline every part of the job search: matching, tailoring, outreach, tracking. Yes, I'm automating the exact thing I'm currently doing. The PM in me couldn't help it.</div>
+    </div>
+    <div class="sp-block">
+      <span class="sp-block-tag">🧠 Wondering</span>
+      <div class="sp-block-h">How many passport stamps before 30?</div>
+      <div class="sp-block-p">The list is growing faster than the budget allows. I'm calling it strategic backlogging.</div>
+    </div>
+    <div class="sp-block">
+      <span class="sp-block-tag">🌍 Exploring</span>
+      <div class="sp-block-h">The intersection of AI and human-centered design</div>
+      <div class="sp-block-p">How do we build AI that doesn't just predict what you want but actually respects how you think? I'm reading, taking notes, and forming opinions.</div>
+    </div>
+
+    <div style="margin-top:2rem;font-size:.52rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.2);display:flex;align-items:center;gap:.5rem;">
+      <span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0;"></span>
+      Updated May 2026
+    </div>
+  </div>
+</div>
+
+<!-- SUB-PAGE: Case Studies — INDEX (Level 2) -->
+<div class="subpage" id="sp-casestudies">
+  <div class="sp-topbar">
+    <button class="sp-back" onclick="closePage('casestudies')"><span class="sp-back-arrow">←</span> Back</button>
+    <span class="sp-title">Case Studies &amp; Projects</span>
+    <span></span>
+  </div>
+  <div class="sp-inner">
+    <div class="sp-hero-tag">Projects · Duke MEM</div>
+    <h1 class="sp-h">Case Studies &amp;<br>Projects</h1>
+    <p class="sp-lead">Coursework and applied projects from my Duke Master of Engineering&nbsp;Management. Strategy, design thinking, marketing, and purpose-driven business.</p>
+
+    <div class="cs-course-card cc-blue" onclick="openPage('cs-competitive')">
+      <div class="cs-course-name">Competitive Strategy</div>
+      <div class="cs-course-ctx">Competitive strategy for technology companies: how products win through analysis, formulation, and execution. Each week brought a new company and a new strategic problem, solved as a team in reports and presentations.</div>
+      <div class="cs-course-footer"><span class="cs-course-cta">View cases ↗</span></div>
+    </div>
+    <div class="cs-course-card cc-green" onclick="openPage('cs-designthinking')">
+      <div class="cs-course-name">Design Thinking &amp; Innovation</div>
+      <div class="cs-course-ctx">A semester-long applied engagement with Naitiv, a real-time video interpretation startup. Moving from empathy and ethnographic research through ideation, prototyping, and testing to a final set of product recommendations.</div>
+      <div class="cs-course-footer"><span class="cs-course-cta">View cases ↗</span></div>
+    </div>
+    <div class="cs-course-card cc-red" onclick="openPage('cs-marketing')">
+      <div class="cs-course-name">Marketing</div>
+      <div class="cs-course-ctx">Marketing high-tech products and services in volatile, fast-moving markets. Weekly Harvard Business Review cases solved as reports and presentations.</div>
+      <div class="cs-course-footer"><span class="cs-course-cta">View cases ↗</span></div>
+    </div>
+    <div class="cs-course-card cc-yellow" onclick="openPage('cs-bizforce')">
+      <div class="cs-course-name">Business as a Force for Good</div>
+      <div class="cs-course-ctx">Why and how businesses must be a force for good. My project focused on regenerating the global food system, identifying how purpose-driven organizations create value beyond profit.</div>
+      <div class="cs-course-footer"><span class="cs-course-cta">View cases ↗</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SUB-PAGE: Competitive Strategy (Level 3) -->
+<div class="subpage" id="sp-cs-competitive">
+  <div class="sp-topbar">
+    <button class="sp-back" onclick="closePage('cs-competitive')"><span class="sp-back-arrow">←</span> Case Studies</button>
+    <span class="sp-title">Competitive Strategy</span>
+    <span></span>
+  </div>
+  <div class="sp-inner">
+    <div class="sp-hero-tag">Projects · Duke MEM</div>
+    <h1 class="sp-h">Competitive Strategy</h1>
+    <p class="sp-lead">Competitive strategy for technology companies: how products win through analysis, formulation, and execution. Each week brought a new company and a new strategic problem, solved as a team in reports and presentations.</p>
+    <div class="cs-grid">
+      <div class="cs-card">
+        <div class="cs-img-slot"><img src="Casestudy/img/Whoop.png" alt="Whoop""/></div>
+        <div class="cs-body">
+          <div class="cs-title">Whoop</div>
+          <div class="cs-blurb">How a wearable-fitness company defends its position as subscription competitors and hardware giants enter the market.</div>
+          <a href="Casestudy/Whoop_final.pdf" target="_blank" rel="noopener" class="cs-pdf">View case study (PDF) ↗</a>
+        </div>
+      </div>
+      <div class="cs-card">
+        <div class="cs-img-slot"><img src="Casestudy/img/blue%20origin.webp" alt="Blue Origin""/></div>
+        <div class="cs-body">
+          <div class="cs-title">Blue Origin</div>
+          <div class="cs-blurb">Competing in commercial spaceflight against an established first-mover, and where a later entrant can still win.</div>
+          <a href="Casestudy/Blue%20Origin%20.pdf" target="_blank" rel="noopener" class="cs-pdf">View case study (PDF) ↗</a>
+        </div>
+      </div>
+      <div class="cs-card">
+        <div class="cs-img-slot"><img src="Casestudy/img/spotify.jpg" alt="Spotify""/></div>
+        <div class="cs-body">
+          <div class="cs-title">Spotify</div>
+          <div class="cs-blurb">Sustaining advantage in music streaming when the catalog is commoditized and platform owners compete directly.</div>
+          <a href="Casestudy/Spotify%20Comp%20Strat%20.pdf" target="_blank" rel="noopener" class="cs-pdf">View case study (PDF) ↗</a>
+        </div>
+      </div>
+      <div class="cs-card">
+        <div class="cs-img-slot"><img src="Casestudy/img/Boston%20dynamics.jpg" alt="Boston Dynamics""/></div>
+        <div class="cs-body">
+          <div class="cs-title">Boston Dynamics</div>
+          <div class="cs-blurb">Turning breakthrough robotics IP into a commercially viable product and market.</div>
+          <a href="Casestudy/Boston%20Dynamics.pdf" target="_blank" rel="noopener" class="cs-pdf">View case study (PDF) ↗</a>
+        </div>
+      </div>
+      <div class="cs-card">
+        <div class="cs-img-slot"><img src="Casestudy/img/illumina.jpg" alt="Illumina""/></div>
+        <div class="cs-body">
+          <div class="cs-title">Illumina</div>
+          <div class="cs-blurb">Defending dominance in gene sequencing against new entrants, and the strategic stakes of vertical integration.</div>
+          <a href="Casestudy/Illumina.pdf" target="_blank" rel="noopener" class="cs-pdf">View case study (PDF) ↗</a>
+        </div>
+      </div>
+      <div class="cs-card">
+        <div class="cs-img-slot"><img src="Casestudy/img/Tesla.webp" alt="Tesla""/></div>
+        <div class="cs-body">
+          <div class="cs-title">Tesla</div>
+          <div class="cs-blurb">Strategy across EVs, energy, and autonomy, and whether the advantage holds as legacy automakers catch up.</div>
+          <a href="Casestudy/Tesla.pdf" target="_blank" rel="noopener" class="cs-pdf">View case study (PDF) ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUB-PAGE: Design Thinking (Level 3) -->
+<div class="subpage" id="sp-cs-designthinking">
+  <div class="sp-topbar">
+    <button class="sp-back" onclick="closePage('cs-designthinking')"><span class="sp-back-arrow">←</span> Case Studies</button>
+    <span class="sp-title">Design Thinking &amp; Innovation</span>
+    <span></span>
+  </div>
+  <div class="sp-inner">
+    <div class="sp-hero-tag">Projects · Duke MEM</div>
+    <h1 class="sp-h">Design Thinking &amp;<br>Innovation</h1>
+    <p class="sp-lead">A semester-long applied engagement with Naitiv, a real-time video interpretation startup. Moving from empathy and ethnographic research through ideation, prototyping, and testing to a final set of product recommendations.</p>
+    <div class="cs-grid" style="grid-template-columns:minmax(260px,480px);">
+      <div class="cs-card">
+        <div class="cs-img-slot"><img src="Casestudy/img/Naitiv.png" alt="Naitiv"/></div>
+        <div class="cs-body">
+          <div class="cs-title">Naitiv: Design Thinking in Practice</div>
+          <div class="cs-blurb">A semester-long engagement applying the full design-thinking process to Naitiv's real-time video interpretation product, ending in a set of validated product recommendations.<br><br>This work is the foundation of my consulting role with Naitiv. <button class="cs-naitiv-link" onclick="closePage('cs-designthinking');closePage('casestudies');openPage('experience')">See the full role in my experience.</button></div>
+          <a href="Casestudy/Final%20ppt_Naitiv%20AI.pdf" target="_blank" rel="noopener" class="cs-pdf">View case study (PDF) ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUB-PAGE: Marketing (Level 3) -->
+<div class="subpage" id="sp-cs-marketing">
+  <div class="sp-topbar">
+    <button class="sp-back" onclick="closePage('cs-marketing')"><span class="sp-back-arrow">←</span> Case Studies</button>
+    <span class="sp-title">Marketing</span>
+    <span></span>
+  </div>
+  <div class="sp-inner">
+    <div class="sp-hero-tag">Projects · Duke MEM</div>
+    <h1 class="sp-h">Marketing</h1>
+    <p class="sp-lead">Marketing high-tech products and services in volatile, fast-moving markets. Weekly Harvard Business Review cases solved as reports and presentations.</p>
+    <div class="cs-grid">
+      <div class="cs-card">
+        <div class="cs-img-slot"><img src="Casestudy/img/Rent%20the%20runway.jpg" alt="Rent the Runway""/></div>
+        <div class="cs-body">
+          <div class="cs-title">Rent the Runway</div>
+          <div class="cs-blurb">Building a subscription rental model in fashion: access over ownership, and the economics of making it work.</div>
+          <a href="Casestudy/1.%20Rent%20the%20Runway%20Case%20Study.pdf" target="_blank" rel="noopener" class="cs-pdf">View case study (PDF) ↗</a>
+        </div>
+      </div>
+      <div class="cs-card">
+        <div class="cs-img-slot"><img src="Casestudy/img/Mountain%20man%20brewing%20company.jpg" alt="Mountain Man Brewing Company""/></div>
+        <div class="cs-body">
+          <div class="cs-title">Mountain Man Brewing Company</div>
+          <div class="cs-blurb">Whether a legacy beer brand risks its identity by launching a line extension to reach younger drinkers.</div>
+          <a href="Casestudy/2.%20Mountain%20Man%20Brewing%20Company%20Case%20Study.pdf" target="_blank" rel="noopener" class="cs-pdf">View case study (PDF) ↗</a>
+        </div>
+      </div>
+      <div class="cs-card">
+        <div class="cs-img-slot"><img src="Casestudy/img/olympic-rent-a-car.jpg" alt="Olympic Rent-A-Car""/></div>
+        <div class="cs-body">
+          <div class="cs-title">Olympic Rent-A-Car</div>
+          <div class="cs-blurb">Pricing and customer-profitability strategy: competing against larger players by knowing which customers are actually worth winning.</div>
+          <a href="Casestudy/3.%20Olympic%20Rent%20a%20Car%20-%20Team%207.pdf" target="_blank" rel="noopener" class="cs-pdf">View case study (PDF) ↗</a>
+        </div>
+      </div>
+      <div class="cs-card">
+        <div class="cs-img-slot"><img src="Casestudy/img/Casper.jpg" alt="Casper""/></div>
+        <div class="cs-body">
+          <div class="cs-title">Casper</div>
+          <div class="cs-blurb">Disrupting the mattress industry direct-to-consumer, and defending the position once incumbents copy the model.</div>
+          <a href="Casestudy/4.%20Consulting%20-%20Casper%20Case%20Study.pdf" target="_blank" rel="noopener" class="cs-pdf">View case study (PDF) ↗</a>
+        </div>
+      </div>
+      <div class="cs-card">
+        <div class="cs-img-slot"><img src="Casestudy/img/24%20hour%20fitness.jpg" alt="24 Hour Fitness""/></div>
+        <div class="cs-body">
+          <div class="cs-title">24 Hour Fitness</div>
+          <div class="cs-blurb">Segmentation and pricing strategy in competitive fitness markets.</div>
+          <a href="Casestudy/5.%20Consulting%20-%2024HourFitness%20Case%20Study.pdf" target="_blank" rel="noopener" class="cs-pdf">View case study (PDF) ↗</a>
+        </div>
+      </div>
+      <div class="cs-card">
+        <div class="cs-img-slot"><img src="Casestudy/img/Athletic%20ecovery%20center.png" alt="Athletic Recovery Center""/></div>
+        <div class="cs-body">
+          <div class="cs-title">Athletic Recovery Center</div>
+          <div class="cs-blurb">A real go-to-market engagement: market research and competitive analysis to surface customer pain points and market gaps, shaping product positioning and strategic recommendations.</div>
+          <a href="Casestudy/6.%20Athletic%20Recovery%20Center%20Marketing%20Plan.pdf" target="_blank" rel="noopener" class="cs-pdf">View case study (PDF) ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUB-PAGE: Business as a Force for Good (Level 3) -->
+<div class="subpage" id="sp-cs-bizforce">
+  <div class="sp-topbar">
+    <button class="sp-back" onclick="closePage('cs-bizforce')"><span class="sp-back-arrow">←</span> Case Studies</button>
+    <span class="sp-title">Business as a Force for Good</span>
+    <span></span>
+  </div>
+  <div class="sp-inner">
+    <div class="sp-hero-tag">Projects · Duke MEM</div>
+    <h1 class="sp-h">Business as a<br>Force for Good</h1>
+    <p class="sp-lead">Why and how businesses must be a force for good. My project focused on regenerating the global food system, identifying how purpose-driven organizations create value beyond profit.</p>
+    <div class="cs-grid" style="grid-template-columns:minmax(260px,480px);">
+      <div class="cs-card">
+        <div class="cs-img-slot"><img src="Casestudy/img/regenerating%20global%20food%20system.png" alt="Regenerating the Global Food System""/></div>
+        <div class="cs-body">
+          <div class="cs-title">Regenerating the Global Food System</div>
+          <div class="cs-blurb">A project exploring how purpose-driven organizations can create value beyond profit, focused on regenerating the global food system.</div>
+          <a href="Casestudy/Final%20Presentation%20-%20Regenerating%20the%20Global%20Food%20System.pdf" target="_blank" rel="noopener" class="cs-pdf">View case study (PDF) ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUB-PAGE: Memo -->
+<div class="subpage" id="sp-memo">
+  <div class="sp-topbar">
+    <button class="sp-back" onclick="closePage('memo')"><span class="sp-back-arrow">←</span> Back</button>
+    <span class="sp-title">Memo</span>
+    <span></span>
+  </div>
+  <div class="sp-inner">
+    <div class="sp-hero-tag">Memo</div>
+    <h1 class="sp-h">Notes &amp;<br>Observations</h1>
+    <p class="sp-lead">Reflections on product, AI, and the things I can't stop thinking about. Unpolished. Honest. Updated when something is worth writing down.</p>
+
+    <div class="sp-block">
+      <span class="sp-block-tag">On AI Products</span>
+      <div class="sp-block-h">The AI Suggested. The User Corrected. The Product Got Smarter.</div>
+      <div class="sp-block-p">The most interesting thing I learned building Oasis wasn't about the model — it was about the override. Every time a user moved a tab out of an AI-suggested group, that was a signal. The product that listens to corrections will beat the product that never makes them.</div>
+    </div>
+
+    <div class="sp-block">
+      <span class="sp-block-tag">On Product Management</span>
+      <div class="sp-block-h">The Brief Is the Product</div>
+      <div class="sp-block-p">Before this site existed, a brief did. I asked myself the same questions I'd ask about any product: who's looking at it, what do they care about, what makes them stay? Building for hiring managers is humbling. You have 30 seconds. Every section had to earn its place.</div>
+    </div>
+
+    <div class="sp-block">
+      <span class="sp-block-tag">On Curiosity</span>
+      <div class="sp-block-h">Curiosity Is a Strategy</div>
+      <div class="sp-block-p">The most useful thing I can bring to any role isn't a specific skill — it's the habit of asking why before asking how. Most product decisions go wrong not because the execution was bad but because someone stopped questioning the premise.</div>
+    </div>
+
+    <div style="margin-top:3rem;padding:1.4rem;border:1px solid rgba(255,255,255,.07);text-align:center;">
+      <div style="font-size:.52rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:.6rem;">More coming soon</div>
+      <div style="font-size:.78rem;color:rgba(255,255,255,.35);">This section is growing. Check back.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SUB-PAGE: Projects INDEX (Level 2) -->
+<div class="subpage" id="sp-projects">
+  <div class="sp-topbar">
+    <button class="sp-back" onclick="closePage('projects')"><span class="sp-back-arrow">←</span> Back</button>
+    <span class="sp-title">Projects</span>
+    <span></span>
+  </div>
+  <div class="sp-inner">
+    <div class="sp-hero-tag">Currently Building 🔨</div>
+    <h1 class="sp-h">Projects</h1>
+    <p class="sp-lead">Systems I've built to solve real problems — usually my own. Each one is a working example of how I think: decompose the problem, use AI as a build partner, and keep the human in control. The list is growing.</p>
+
+    <div class="proj-card" onclick="openPage('jobsearch')" style="cursor:pointer;">
+      <div class="proj-img-slot"><img src="Casestudy/img/Job%20search%20main.jpg" alt="Job Search Automation" style="width:100%;height:100%;object-fit:cover;display:block;"/></div>
+      <div class="proj-body">
+        <div class="proj-title">Job Search Automation</div>
+        <div class="proj-summary">A multi-workflow system that scrapes, scores, and drafts outreach for my job search — running before I wake up.</div>
+        <a class="proj-cta" onclick="event.stopPropagation();openPage('jobsearch')" style="cursor:pointer;">Deep dive ↗</a>
+      </div>
+    </div>
+
+    <div class="proj-more">More projects in progress</div>
+  </div>
+</div>
+
+<!-- SUB-PAGE: Job Search Automation DEEP-DIVE (Level 3) -->
+<div class="subpage" id="sp-jobsearch">
+  <div class="sp-topbar">
+    <button class="sp-back" onclick="closePage('jobsearch')"><span class="sp-back-arrow">←</span> Projects</button>
+    <span class="sp-title">Job Search Automation</span>
+    <span></span>
+  </div>
+  <div class="sp-inner">
+
+    <!-- HERO -->
+    <div class="sp-hero-tag">Project · AI Automation</div>
+    <h1 class="sp-h">Job Search<br>Automation</h1>
+    <p class="sp-lead">I built a multi-workflow system that scrapes job postings, scores them for fit, finds the right people to reach out to, and drafts tailored outreach and application materials — all before I wake up. It's a working example of how I think: break a messy problem into coordinated stages, use AI as a build partner, and keep the human in control of every decision that matters.</p>
+
+    <!-- The Problem -->
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">The Problem</div><div class="sp-divider-line"></div></div>
+    <div class="sp-block">
+      <div class="sp-block-p">Job searching is repetitive, high-volume, and low-signal. The work that actually matters — deciding where to apply, who to reach out to, what to say — gets buried under hours of manual scraping, copy-pasting, and resume edits. I wanted to automate the busywork and keep my attention on the decisions.</div>
+    </div>
+
+    <!-- The Approach -->
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">The Approach</div><div class="sp-divider-line"></div></div>
+    <div class="sp-block">
+      <div class="sp-block-p">I started with one question: if I had a magic wand, what would the system do for me? Find relevant jobs, score them, tell me who to talk to, draft the outreach, and deliver it as a morning briefing. Each capability became its own workflow, passing data to the next. I built it in n8n, with AI as my architect and debugger — no engineering background required.</div>
+    </div>
+
+    <!-- The Stack -->
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">The Stack</div><div class="sp-divider-line"></div></div>
+    <div style="margin-bottom:.5rem;">
+      <div class="jsa-stack-row"><span class="jsa-stack-tool">n8n</span><span class="jsa-stack-role">Automation engine that runs and connects every workflow.</span></div>
+      <div class="jsa-stack-row"><span class="jsa-stack-tool">Apify</span><span class="jsa-stack-role">Scrapes LinkedIn job postings by keyword, so the search is as wide as my keywords, not a fixed company list.</span></div>
+      <div class="jsa-stack-row"><span class="jsa-stack-tool">Notion</span><span class="jsa-stack-role">The databases (Jobs, Companies, Contacts, Materials) that hold state across workflows.</span></div>
+      <div class="jsa-stack-row"><span class="jsa-stack-tool">Google Docs</span><span class="jsa-stack-role">Stores my master resume and holds the working drafts the system reads from and writes back to.</span></div>
+      <div class="jsa-stack-row"><span class="jsa-stack-tool">ChatGPT</span><span class="jsa-stack-role">Drafts outreach and generates a tailored resume in Overleaf LaTeX plus a matching cover letter for each role.</span></div>
+      <div class="jsa-stack-row"><span class="jsa-stack-tool">Claude (Cowork)</span><span class="jsa-stack-role">Researches target companies and surfaces relevant new people to reach out to.</span></div>
+      <div class="jsa-stack-row" style="border-bottom:none;"><span class="jsa-stack-tool">Gmail</span><span class="jsa-stack-role">Delivers the briefing to my inbox.</span></div>
+    </div>
+    <div class="jsa-ai-note">Two AI tools, each for what it's best at — ChatGPT for structured generation, Claude for open-ended research.</div>
+
+    <!-- Workflows -->
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">The System, Workflow by Workflow</div><div class="sp-divider-line"></div></div>
+    <div class="sp-block">
+      <div class="sp-block-p" style="margin-bottom:1.4rem;">Each workflow runs on a schedule and passes its output to the next.</div>
+
+      <div class="jsa-wf">
+        <div class="jsa-wf-num">Workflow 1</div>
+        <div class="jsa-wf-name">Auto-fetch Jobs</div>
+
+        <div class="jsa-wf-body">Runs daily. Apify scrapes LinkedIn job postings by keyword, then the workflow cleans and structures the raw results, loops through each posting, checks the Jobs database to skip duplicates, applies exclusion rules for the wrong title or seniority, and saves only genuinely new, relevant roles. A rate-limit delay in the loop keeps the scraper from overloading the API. This is the workflow where I debugged a 403 authentication error and a context- and credit-limit issue — solving those taught me more about the system than building the happy path did.</div>
+      </div>
+
+      <div class="jsa-wf">
+        <div class="jsa-wf-num">Workflow 2</div>
+        <div class="jsa-wf-name">Score Jobs</div>
+
+        <div class="jsa-wf-body">Pulls each new, unscored job and calculates a fit score weighing role tier, salary, remote status, and whether I have a path into the company. Scores are written back to Notion so the best-fit roles rise to the top. This is the layer that turns a flat list into a ranked queue, so my attention goes to the strongest matches instead of everything.</div>
+      </div>
+
+      <div class="jsa-wf">
+        <div class="jsa-wf-num">Workflow 3</div>
+        <div class="jsa-wf-name">Find &amp; Match the Right People</div>
+
+        <div class="jsa-wf-body">For each role, the system identifies who to reach out to. If I already know someone at the company, it surfaces that contact for a warm message. If I don't, I use Claude Cowork to research the company and surface relevant new people worth connecting with. It turns "who do I know here?" into "who should I talk to here?" — through someone I know or someone new.</div>
+      </div>
+
+      <div class="jsa-wf">
+        <div class="jsa-wf-num">Workflow 4</div>
+        <div class="jsa-wf-name">Generate Outreach &amp; Application Materials</div>
+
+        <div class="jsa-wf-body">Branches by situation. For someone I know, it drafts a warm message that uses the relationship. For a new person, it drafts a cold LinkedIn connection request with a personalized note. For the application itself, I keep a master resume in Google Docs as the single source of truth; the system pairs it with the job description and uses ChatGPT to produce a tailored resume that surfaces the most relevant experience — returned as Overleaf LaTeX, ready to compile — along with a matching cover letter. Every output is a draft I review before anything is sent or submitted.</div>
+      </div>
+
+      <div class="jsa-wf">
+        <div class="jsa-wf-num">Workflow 5</div>
+        <div class="jsa-wf-name">Morning Briefing</div>
+
+        <div class="jsa-wf-body">Pulls the day's new, scored jobs, orders them by fit, and writes a plain-language summary of the best matches. It delivers that briefing straight to my inbox each morning, so I wake up to a ranked shortlist of the strongest new roles instead of an empty search bar.</div>
+      </div>
+
+      <div class="jsa-wf">
+        <div class="jsa-wf-num">Workflow 6</div>
+        <div class="jsa-wf-name">Error Notification</div>
+
+        <div class="jsa-wf-body">A safety net. If any workflow fails, this one catches the error and emails me immediately, so a silent failure never costs me a day. A system you can't trust to tell you when it broke isn't one you can rely on.</div>
+      </div>
+    </div>
+
+    <!-- Human-AI Co-Design -->
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">Human-AI Co-Design</div><div class="sp-divider-line"></div></div>
+    <div class="sp-block">
+      <div class="sp-block-p">I built this by working with AI as architect, debugger, and reasoning partner — plan, build one step at a time, test until something breaks, debug, repeat. The most useful reframe of the whole project: failure isn't rejection, it's data. Every broken run taught me how the system actually worked.</div>
+    </div>
+
+    <!-- What I Kept Human -->
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">What I Kept Human</div><div class="sp-divider-line"></div></div>
+    <div class="sp-block">
+      <div class="sp-block-p">The system handles the mechanical part — fetching, organizing, scoring, finding people, drafting. I keep the part that affects other people: the decision to reach out or apply, and a review of every message and every resume before it goes out. The system generates drafts, never finished actions. For a search built on relationships, that boundary isn't a limitation — it's the point.</div>
+    </div>
+
+    <!-- Impact -->
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">Impact</div><div class="sp-divider-line"></div></div>
+    <div class="sp-exp-mstrip" style="margin-bottom:1rem;">
+      <div class="sp-exp-mstrip-cell">
+        <div class="sp-exp-mn">Under 10 min</div>
+        <div class="sp-exp-ml">Per-Application Tailoring (from 20&ndash;25)</div>
+      </div>
+    </div>
+    <div style="font-size:.88rem;color:rgba(255,255,255,.4);line-height:1.8;margin-bottom:2rem;">What used to take 20&ndash;25 minutes of manual tailoring per application now takes under 10 — including reviewing every draft, evaluating the fit, and making sure it's genuinely personalized to me and the role.</div>
+
+    <!-- Reflection -->
+    <div class="sp-divider"><div class="sp-divider-line"></div><div class="sp-divider-txt">Reflection</div><div class="sp-divider-line"></div></div>
+    <div class="sp-block">
+      <div class="sp-block-p">What I really built isn't a job-search tool. It's proof of how I work: take an overwhelming, ambiguous problem, break it into coordinated stages, use AI as a force multiplier, design for the human to stay in control, and keep iterating after v1. That's the same instinct I bring to product.</div>
+    </div>
+
+    <div class="jsa-closing">Built with n8n, Apify, ChatGPT, and Claude. Iterating on v2 now.</div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     JAVASCRIPT
+══════════════════════════════ -->
+<script>
+/* ── CURSOR ── */
+const cursor = document.getElementById('cursor');
+let mx = innerWidth/2, my = innerHeight/2, cx = mx, cy = my;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+(function raf() {
+  cx += (mx - cx) * .14;
+  cy += (my - cy) * .14;
+  cursor.style.left = cx + 'px';
+  cursor.style.top = cy + 'px';
+  requestAnimationFrame(raf);
+})();
+document.querySelectorAll('a,button,.tile.hov,.sb a,.nl-btn').forEach(el => {
+  el.addEventListener('mouseenter', () => cursor.classList.add('grow'));
+  el.addEventListener('mouseleave', () => cursor.classList.remove('grow'));
+});
+
+/* ── INTERSECTION OBSERVER: stagger animations ── */
+const io = new IntersectionObserver((entries) => {
+  const visible = entries.filter(e => e.isIntersecting);
+  visible.forEach((entry, i) => {
+    setTimeout(() => {
+      entry.target.classList.add('vis');
+      io.unobserve(entry.target);
+    }, i * 72);
+  });
+}, { threshold: 0.04, rootMargin: '0px 0px -16px 0px' });
+document.querySelectorAll('.tile, .tool-tile, .corner-tile').forEach(el => io.observe(el));
+
+/* ── MODALS (legacy, kept for about modal) ── */
+function openM(id) {
+  const el = document.getElementById('m-' + id);
+  if (!el) return;
+  el.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeM(id) {
+  const el = document.getElementById('m-' + id);
+  if (!el) return;
+  el.classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.querySelectorAll('.overlay').forEach(o => {
+  o.addEventListener('click', e => {
+    if (e.target === o) { o.classList.remove('open'); document.body.style.overflow = ''; }
+  });
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.overlay.open').forEach(o => {
+      o.classList.remove('open'); document.body.style.overflow = '';
+    });
+    document.querySelectorAll('.subpage.sp-open').forEach(sp => {
+      const id = sp.id.replace('sp-', '');
+      closePage(id);
+    });
+  }
+});
+
+/* ── SUB-PAGES ── */
+const SP_IDS = ['experience','oasis','currently','casestudies','memo','building'];
+/* ── How I Work accordion ── */
+function hwToggle(n) {
+  for (let i = 1; i <= 4; i++) {
+    const header  = document.querySelector('#hw-phase-' + i + ' .hw-header');
+    const content = document.getElementById('hw-content-' + i);
+    if (!header || !content) continue;
+    if (i === n) {
+      const opening = !content.classList.contains('open');
+      content.classList.toggle('open', opening);
+      header.classList.toggle('hw-open', opening);
+      header.setAttribute('aria-expanded', opening ? 'true' : 'false');
+    } else {
+      content.classList.remove('open');
+      header.classList.remove('hw-open');
+      header.setAttribute('aria-expanded', 'false');
+    }
+  }
+}
+
+function openPage(id) {
+  const el = document.getElementById('sp-' + id);
+  if (!el) return;
+  el.classList.add('sp-open');
+  document.body.style.overflow = 'hidden';
+}
+function closePage(id) {
+  const el = document.getElementById('sp-' + id);
+  if (!el) return;
+  el.classList.remove('sp-open');
+  document.body.style.overflow = '';
+}
+
+/* ── PARALLAX on hero skyline ── */
+const skyline = document.querySelector('.skyline');
+const heroBg = document.querySelector('.hero');
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  if (skyline) skyline.style.transform = `translateY(${y * 0.12}px)`;
+}, { passive: true });
+
+/* ── NEWSLETTER ── */
+function handleSubscribe() {
+  const inp = document.querySelector('.nl-input');
+  if (inp && inp.value && inp.value.includes('@')) {
+    inp.value = '✓ You\'re on the list!';
+    inp.style.color = '#f5d016';
+    inp.disabled = true;
+  } else {
+    inp.style.borderBottom = '1px solid var(--red)';
+    setTimeout(() => inp.style.borderBottom = '', 1200);
+  }
+}
+
+/* ── CASE STUDY CARD CLICK ── */
+document.querySelectorAll('.cs-card').forEach(card => {
+  card.addEventListener('click', function(e) {
+    if (e.target.closest('.cs-naitiv-link')) return;
+    const link = card.querySelector('.cs-pdf');
+    if (link && link.href && link.href !== '#') {
+      window.open(link.href, '_blank', 'noopener');
+    }
+  });
+});
+
+/* ── BACK TO TOP ── */
+(function(){
+  const btn = document.getElementById('back-top');
+  const threshold = document.documentElement.scrollHeight * 0.55;
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > threshold);
+  }, {passive:true});
+})();
+
+/* ── CONTACT FORM ── */
+(function(){
+  const form = document.getElementById('contact-form');
+  if (!form) return;
+  const btn  = document.getElementById('cf-btn');
+  const ok   = document.getElementById('cf-ok');
+  const err  = document.getElementById('cf-err');
+
+  form.addEventListener('submit', async function(e){
+    e.preventDefault();
+    ok.style.display = 'none';
+    err.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    const data = new FormData(form);
+    try {
+      const res = await fetch('https://formspree.io/f/mzdqknqr', {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        ok.style.display = 'block';
+        form.reset();
+        btn.textContent = 'Sent';
+      } else {
+        throw new Error('non-ok');
+      }
+    } catch(_) {
+      err.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Send Message';
+    }
+  });
+})();
+</script>
+</body>
+</html>
